@@ -1,0 +1,35 @@
+<%- include('partials/header', {pageTitle: 'Critix - Movie Search'}) %>
+
+<link rel="stylesheet" href="../css/createAndUpdate.css">
+
+<main>
+  <div class="container background-container">
+    <form class="review-form bg-warning text-black" id="review-form">
+      <h1 id="gameTitle">Título do Filme</h1><br>
+
+      <label for="comment">De 1 a 5, como você classificaria esse jogo?</label><br>
+      <input type="hidden" id="rating" name="rating" required>
+      <div id="stars1">
+        <span class="star" data-value="1">☆</span>
+        <span class="star" data-value="2">☆</span>
+        <span class="star" data-value="3">☆</span>
+        <span class="star" data-value="4">☆</span>
+        <span class="star" data-value="5">☆</span>
+      </div><br>
+      
+      <label for="comment">Compartilhe sua Experiência: </label><br>
+      <textarea id="comment" name="comment" rows="4" cols="50" placeholder="Adorei o filme!"></textarea><br>
+
+      <label for="isPublic">Deseja que os outros vejam sua avaliação?</label><br>
+      <input type="checkbox" id="isPublic" name="isPublic" checked><br><br>
+
+      <input class="submit-button btn-primary text-warning" type="submit" id="create-review-button" value="Enviar">
+      
+      <a href="/" class="back-link">Voltar para a página inicial</a>
+    </form>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+
+<script src="../js/createReview.js"></script>

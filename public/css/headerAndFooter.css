@@ -1,0 +1,127 @@
+
+body {
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+h1, h2, h3 {
+  font-weight: bold;
+}
+
+a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--primary-color);
+  height: 100px;
+  padding: 0 20px;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 10px 10px;
+  background-color: #000000; 
+}
+
+nav a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  margin: 0 15px;
+  padding: 10px;
+  transition: color 0.3s ease;
+  
+}
+
+nav a:hover {
+  background-color: rgb(58, 56, 56); 
+}
+
+nav img {
+  margin-right: 8px;
+}
+
+nav ul.submenu {
+  display: none;
+  position: absolute;
+  background-color: #333;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+nav li:hover ul.submenu {
+  display: block;
+}
+
+nav ul.submenu li {
+  display: block;
+}
+
+input, button {
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+}
+
+#login-form, #register-form {
+  display: none;
+  position: fixed;
+  background-color: #fff;
+  padding: 30px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  z-index: 9999;
+}
+
+.close-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: #333;
+  font-size: 18px;
+}
+
+.form-control {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: calc(100% - 20px);
+  box-sizing: border-box;
+}
+
+.btn-primary {
+  background-color: rgb(51, 4, 63);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: rgb(173, 0, 179);
+}
+
+#login-form input {
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+#login-form button {
+  width: 100%;
+  padding: 10px;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+

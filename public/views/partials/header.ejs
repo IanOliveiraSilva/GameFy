@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <title>
+    <%= pageTitle %>
+  </title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="../../css/headerAndFooter.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+
+</head>
+
+<body>
+
+  <header class="py-4">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <a href="/">
+            <img src="../images/logo.png" alt="Logo do CritiX" width="80" height="80">
+          </a>
+        </div>
+        <div class="col-md-6 text-right">
+          <nav class="navbar navbar-expand-md navbar-dark">
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ml-auto">
+
+                <li class="nav-item">
+                  <a class="nav-link text-white" href="/profile" id="profile-display"></a>
+                </li>
+            
+                <li class="nav-item">
+                  <a class="nav-link text-white" href="/search-game">Jogos</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link text-white" href="#">Listas</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link text-white" href="#" onclick="showRegisterForm()">Criar Conta</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link text-white" href="#" onclick="showLoginForm()">Entrar na conta</a>
+                </li>
+
+                <li class="nav-item">
+                  <a class="nav-link text-white" href="/" id="logout">Logout</a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+
+          <div id="login-form">
+            <i class="fas fa-times close-icon" onclick="closeLoginForm()"></i>
+            <input type="email" id="email" class="form-control" placeholder="Email">&emsp;
+            <input type="password" id="password" class="form-control" placeholder="Senha">&emsp;
+            <button class="btn btn-primary" onclick="login()">Entrar</button>
+          </div>
+
+          <div id="register-form">
+            <i class="fas fa-times close-icon" onclick="closeRegisterForm()"></i>
+            <input type="email" id="email2" class="form-control" placeholder="Email">&emsp;
+            <input type="username" id="username" class="form-control" placeholder="Usuario">&emsp;
+            <input type="password" id="password2" class="form-control" placeholder="Senha">&emsp;
+            <button class="btn btn-primary" onclick="register()">Registrar</button>
+          </div>
+        </div>
+      </div>
+  </header>
+
+  <script src="../../js/header.js"></script>

@@ -4,8 +4,12 @@
 
 <main>
   <div class="container background-container">
-    <form class="review-form bg-warning text-black" id="review-form">
-      <h1 id="gameTitle">Título do Filme</h1><br>
+    <form class="review-form text-white" id="review-form">
+      <div class="text-center">
+        <img id="gamePoster" class="img-poster img-fluid ">
+        <h1 id="gameTitle" class="">Título do Filme</h1><br>
+      </div>
+
 
       <label for="comment">De 1 a 5, como você classificaria esse jogo?</label><br>
       <input type="hidden" id="rating" name="rating" required>
@@ -18,12 +22,12 @@
       </div><br>
       
       <label for="comment">Compartilhe sua Experiência: </label><br>
-      <textarea id="comment" name="comment" rows="4" cols="50" placeholder="Adorei o filme!"></textarea><br>
+      <textarea id="comment" name="comment" rows="4" cols="50" placeholder="Adorei esse jogo!"></textarea><br>
 
       <label for="isPublic">Deseja que os outros vejam sua avaliação?</label><br>
       <input type="checkbox" id="isPublic" name="isPublic" checked><br><br>
 
-      <input class="submit-button btn-primary text-warning" type="submit" id="create-review-button" value="Enviar">
+      <input class="submit-button btn-primary" type="submit" id="create-review-button" value="Enviar">
       
       <a href="/" class="back-link">Voltar para a página inicial</a>
     </form>

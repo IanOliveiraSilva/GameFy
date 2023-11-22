@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Nexa:wght@400;500;700&display=swap');
+
+body {
+  font-family: 'Nexa', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  background-image: url('../images/background.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.row {
+  justify-content: center;
+}
+
+.form-label {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.cat-options {
+  display: flex;
+  justify-content: left;
+}
+
+.cat-option {
+  margin: 0 20px;
+  transition: transform 0.3s;
+}
+
+.cat-option:hover {
+  transform: scale(1.1);
+}
+
+.cat-radio {
+  display: none;
+}
+
+.cat-image {
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 3px solid rgb(0, 0, 0);
+  border-radius: 100px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.5);
+  transition: all 0.5s ease;
+}
+
+.img-bordered {
+  border: 5px solid rgb(0, 0, 0);
+  border-radius: 20px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.login-form {
+  background-color: rgb(0, 0, 0);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.form-control {
+  border: 4px solid #383838;
+  border-radius: 5px;
+}
+
+.form-control:focus {
+  border-color: #000000;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.btn-primary {
+  background-color: #3f063c;
+  border-color: #000000;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.btn-primary:hover {
+  background-color: #ffffff;
+  color: #000000;
+  border-color: #000000;
+}

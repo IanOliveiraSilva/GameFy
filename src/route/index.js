@@ -1,14 +1,19 @@
 const router = require('express').Router();
 
 const routes = [
-  { path: '/', title: 'CritiX' },
-  { path: '/search-game', title: 'Get a game'},
-  { path: '/createReview', title: 'Create a game review'}
+  { path: '/', view: 'index' },
+  { path: '/games', view: 'search-game' },
+  { path: '/game/:id', view: 'getGameById' },
+  { path: '/create-review/:id', view: 'createReview' },
+  { path: '/profile', view: 'profile'},
+  { path: '/updateProfile', view: 'updateProfile'},
+  { path: '/game-reviews/:id', view: 'getReviewsByGame'},
+  { path: '/review/:id', view: 'getReviewById'}
 ];
 
 routes.forEach((route) => {
   router.get(route.path, (req, res, next) => {
-    res.render(route.path.slice(1), { title: route.title });
+    res.render(route.view);
   });
 });
 

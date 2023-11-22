@@ -2,9 +2,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const titleInput = document.getElementById('gameTitle');
     const gameTitle = localStorage.getItem('gameTitle');
     const titleElement = document.getElementById('gameTitle');
+
+    const posterInput = document.getElementById('gamePoster');
+    const gamePoster = localStorage.getItem('gamePoster');
+
+    if(gamePoster){
+      posterInput.src=`${gamePoster}`
+    }
+
     const createReviewButton = document.getElementById('create-review-button');
-
-
+    
     if (gameTitle) {
       titleInput.value = gameTitle;
       titleElement.textContent = gameTitle;
@@ -20,11 +27,12 @@ document.addEventListener('DOMContentLoaded', () => {
   
       const token = localStorage.getItem('token');
   
-      const gameId = localStorage.getItem('gameId');
+      const parts = window.location.pathname.split('/');
+      const gameId = parts.pop();
   
       createReviewButton.disabled = true;
   
-      const response = await fetch('/api/review', {
+      const response = await fetch(`/api/create-review/${gameId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,6 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         body: JSON.stringify({
           gameId: gameId,
+          title: gameTitle,
+          image: gamePoster,
           rating,
           comment,
           isPublic
@@ -41,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await response.json();
   
       if (response.ok) {
-        window.location.href = '/getAllReviews';
+        window.location.href = '/';
       } else {
         alert(data.message);
       }
@@ -55,20 +65,26 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('rating').value = value;
   
       let currentStar = this;
+      let starValue = 1;
   
       while (currentStar) {
         currentStar.textContent = '★';
         currentStar.classList.add('selected');
+        currentStar.style.textShadow = `0 0 ${10 * starValue}px #e70fdc`;
         currentStar = currentStar.previousElementSibling;
+        starValue++;
       }
   
       currentStar = this.nextElementSibling;
+      starValue = 1;
   
       while (currentStar) {
         currentStar.textContent = '☆';
         currentStar.classList.remove('selected');
+        currentStar.style.textShadow = 'none';
         currentStar = currentStar.nextElementSibling;
+        starValue++;
       }
     });
   });
-
+  

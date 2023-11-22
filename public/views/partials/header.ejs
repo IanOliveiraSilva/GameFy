@@ -11,7 +11,7 @@
   </title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="../../css/headerAndFooter.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
@@ -19,13 +19,12 @@
 </head>
 
 <body>
-
   <header class="py-4">
     <div class="container">
       <div class="row align-items-center">
         <div class="col-md-6">
           <a href="/">
-            <img src="../images/logo.png" alt="Logo do CritiX" width="80" height="80">
+            <img class="logo" src="../images/logo1.png" alt="Logo do CritiX" width="200" height="150">
           </a>
         </div>
         <div class="col-md-6 text-right">
@@ -34,11 +33,12 @@
               <ul class="navbar-nav ml-auto">
 
                 <li class="nav-item">
-                  <a class="nav-link text-white" href="/profile" id="profile-display"></a>
+                  <div id="get-profile" class="profile-image-header-container">
+                  </div>
                 </li>
-            
+
                 <li class="nav-item">
-                  <a class="nav-link text-white" href="/search-game">Jogos</a>
+                  <a class="nav-link text-white" href="/games">Jogos</a>
                 </li>
 
                 <li class="nav-item">
@@ -46,16 +46,17 @@
                 </li>
 
                 <li class="nav-item">
-                  <a class="nav-link text-white" href="#" onclick="showRegisterForm()">Criar Conta</a>
+                  <a class="nav-link text-white" href="#" id="register" onclick="showRegisterForm()"></a>
                 </li>
 
                 <li class="nav-item">
-                  <a class="nav-link text-white" href="#" onclick="showLoginForm()">Entrar na conta</a>
+                  <a class="nav-link text-white" href="#" id="login" onclick="showLoginForm()"></a>
                 </li>
 
                 <li class="nav-item">
-                  <a class="nav-link text-white" href="/" id="logout">Logout</a>
+                  <a class="nav-link text-white cursor-pointer" id="openPopup"></a>
                 </li>
+
               </ul>
             </div>
           </nav>
@@ -64,7 +65,7 @@
             <i class="fas fa-times close-icon" onclick="closeLoginForm()"></i>
             <input type="email" id="email" class="form-control" placeholder="Email">&emsp;
             <input type="password" id="password" class="form-control" placeholder="Senha">&emsp;
-            <button class="btn btn-primary" onclick="login()">Entrar</button>
+            <button class="btn" onclick="login()">Entrar</button>
           </div>
 
           <div id="register-form">
@@ -72,10 +73,34 @@
             <input type="email" id="email2" class="form-control" placeholder="Email">&emsp;
             <input type="username" id="username" class="form-control" placeholder="Usuario">&emsp;
             <input type="password" id="password2" class="form-control" placeholder="Senha">&emsp;
-            <button class="btn btn-primary" onclick="register()">Registrar</button>
+            <button class="btn" onclick="register()">Registrar</button>
           </div>
+
+
+          <div id="popup" class="popup">
+            <div class="popup-content">
+              <p class="logout-message">Tem certeza que deseja sair da conta?</p>
+              <div class="logout-options">
+                <button onclick="confirmLogout()">Sim</button>
+                <button id="closePopup">Não</button>
+              </div>
+            </div>
+          </div>
+          
+
         </div>
       </div>
   </header>
 
   <script src="../../js/header.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>

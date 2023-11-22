@@ -5,7 +5,8 @@ const RAWG_API_KEY = process.env.RAWG_API_KEY;
 const db = require("../config/db");
 
 exports.getGameById = async (req, res) => {
-    const { id } = req.query;
+    const id = req.params.id;
+
     try {
         const rawgResponse = await axios.get(`https://api.rawg.io/api/games/${id}?key=${RAWG_API_KEY}`);
         if (rawgResponse.status === 200) {
@@ -21,10 +22,27 @@ exports.getGameById = async (req, res) => {
                 playtime: game.playtime,
                 platforms: game.platforms.map(platform => platform.platform.name),
                 website: game.website,
+                gameId: game.id,
             };
+
+            let { rows: [mediagames] } = await db.query(
+                `
+              SELECT medianotas
+              FROM games 
+              WHERE gameId = $1
+              `,
+                [id]);
+
+            if (!mediagames) {
+                mediagames = {
+                    medianotas: 0,
+                };
+            }
+
             res.status(200).json({
                 body: {
-                    gameData
+                    gameData,
+                    mediagames
                 }
             });
         } else {
@@ -34,3 +52,45 @@ exports.getGameById = async (req, res) => {
         return res.status(500).json({ message: 'Erro ao pesquisar jogo' });
     }
 };
+
+exports.getGamesTendency = async (req, res) => {
+    try {
+        const { rows: gamesWithReviewCounts } = await db.query(
+            `
+        SELECT games.gameId, games.image, games.title, COUNT(reviews.id) AS review_count
+        FROM games
+        LEFT JOIN reviews ON games.gameid = reviews.gameId
+        WHERE reviews.ispublic = true OR reviews.ispublic IS NULL
+        GROUP BY games.gameid, games.title
+        ORDER BY review_count DESC
+        LIMIT 4
+        `
+        );
+
+        res.status(200).json({
+            games: gamesWithReviewCounts
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Erro ao processar a solicitação.' });
+    }
+};
+
+exports.playedGame = async (req, res) => {
+    const id = req.params.id;
+    const userId = req.user.id;
+
+    try {
+        const result = await db.query('SELECT played FROM user_game WHERE gameid = $1', [id]);
+        const currentPlayedValue = result.rows[0].played;
+
+        const newPlayedValue = !currentPlayedValue;
+        await db.query('UPDATE user_game SET played = $1 WHERE gameid = $2 and userId = $3', [newPlayedValue, id, userId]);
+
+        res.status(200).json({ message: 'Status do jogo atualizado com sucesso.' });
+    } catch (error) {
+        console.error('Erro ao atualizar o status do jogo:', error);
+        res.status(500).json({ message: 'Erro interno do servidor.' });
+    }
+};
+

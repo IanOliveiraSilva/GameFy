@@ -24,6 +24,11 @@ function closeLoginForm() {
   navbarNav.style.display = "block";
 }
 
+function confirmLogout() {
+  localStorage.clear();
+  window.location.href = '/';
+}
+
 async function login() {
   const email_or_username = document.getElementById('email').value;
   const password = document.getElementById('password').value;
@@ -72,18 +77,47 @@ async function register() {
   }
 }
 
-document.getElementById('logout').addEventListener('click', function () {
-  const confirmLogout = confirm('Tem certeza que deseja sair da conta?');
-  if (confirmLogout) {
-      localStorage.clear();
-  }
-});
-
 document.addEventListener('DOMContentLoaded', async () => {
-  const username = localStorage.getItem('username')
+  const username = localStorage.getItem('username');
+  const icon = localStorage.getItem('icon');
+
+  //POP UP
+  var openButton = document.getElementById('openPopup');
+  var popup = document.getElementById('popup');
+  var closeButton = document.getElementById('closePopup');
+
+  openButton.addEventListener('click', function () {
+    document.getElementById('popup').classList.add('active');
+  });
+
+  closeButton.addEventListener('click', function () {
+    document.getElementById('popup').classList.remove('active');
+  });
+
+  window.addEventListener('click', function (event) {
+    if (event.target == popup) {
+      popup.style.display = 'none';
+    }
+  });
+
   if (username) {
-      document.getElementById('profile-display').textContent = `Olá, ${username}`;
+    document.getElementById('get-profile').innerHTML =
+      `
+        <img src="${icon}" class="profile-image-header"
+          href="/profile">&emsp;
+        <p>${username}</p>
+      `;
+    document.getElementById('openPopup').textContent = `Logout`;
+    document.getElementById('register').style.display = 'none';
+    document.getElementById('login').style.display = 'none';
   } else {
-      document.getElementById('profile-display').style.display = 'none';
+    document.getElementById('register').textContent = `Crie sua conta`;
+    document.getElementById('login').textContent = `Entre na sua conta`;
+    document.getElementById('openPopup').style.display = 'none';
   }
+
+  const getProfile = document.getElementById('get-profile');
+  getProfile.addEventListener('click', function (event) {
+    window.location.href = '/profile';
+  });
 })  

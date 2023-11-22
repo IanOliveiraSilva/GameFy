@@ -1,0 +1,30 @@
+<%- include('partials/header', {pageTitle: 'Critix - Movie Search' }) %>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="../css/getForm.css">
+
+  <main class="container">
+    <section id="section" class="reviews p-4">
+      <h1 id="pageTitle"></h1><br>
+      <div id="reviews">
+      </div>
+      <br>
+    </section>
+
+    <div id="deletePopup" class="popup">
+      <div class="popup-content">
+        <p class="logout-message">Tem certeza que deseja excluir a review?</p>
+        <div class="logout-options">
+          <button onclick="confirmDelete()">Sim</button>
+          <button id="closePopupDelete">Não</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+
+
+  <%- include('partials/footer') %>
+
+    <script src="../js/getReviewById.js"></script>

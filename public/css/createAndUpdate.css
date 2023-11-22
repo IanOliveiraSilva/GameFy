@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Nexa:wght@400;500;700&display=swap');
+
+body {
+  font-family: 'Nexa', sans-serif;
+  margin: 0;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  background-image: url('../images/background.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.review-form {
+  background-color: #000000;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgb(233, 5, 241);
+  padding: 20px;
+  margin-top: 20px;
+}
+
+
+label {
+  font-weight: bold;
+  color: #ffffff;
+  font-size: 18px;
+  transition: color 0.3s;
+}
+
+label:hover {
+  color: #6c5ce7;
+}
+
+
+
+input[type="text"],
+input[type="number"],
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #6c5ce7;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  color: #2d3436;
+  background-color: #ecf0f1;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: #d35400;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+input[type="checkbox"] {
+  margin-left: 5px;
+}
+
+
+.back-link {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.back-link:hover{
+  text-decoration: none;
+  color: #860880;
+}
+
+.star {
+  font-size: 2em;
+  cursor: pointer;
+  color: #6e42c1;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+.star.selected {
+  color: #e70fdc;
+  text-shadow: 0 0 10px #e70fdc;
+}
+
+.star:hover {
+  color: #e70fdc;
+  text-shadow: 0 0 10px #e70fdc;
+}
+
+
+#comment {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #6c5ce7;
+  border-radius: 10px;
+  font-size: 18px;
+  resize: vertical;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  color: #2d3436;
+  background-color: #ecf0f1;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#comment:focus {
+  outline: none;
+  border: 3px solid #bcb3ff;
+  box-shadow: 0 0 10px rgba(151, 151, 151, 0.1);
+}
+
+#isPublic {
+  appearance: none;
+  width: 30px;
+  height: 30px;
+  border: 3px solid #6c5ce7;
+  background-color: #ffffff;
+  border-radius: 5px;
+  outline: none;
+  transition: background-color 0.3s, border-color 0.3s;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+#isPublic:checked {
+  background-color: #6c5ce7;
+  border-color: #6c5ce7;
+  color: #ffffff;
+}
+
+#isPublic:checked::before {
+  content: "\2713"; 
+  font-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+
+.btn-primary {
+  background-color: #6c5ce7;
+  border-color: #2d3436;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 5px;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #3f063c;
+  border-color: #2d3436;
+  color: #ffffff;
+}
+
+
+.results {
+  margin-top: 30px;
+  list-style: none;
+  padding: 0;
+}
+
+.results li {
+  cursor: pointer;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 10px;
+  transition: transform 0.2s ease-in-out;
+  list-style-type: none;
+}
+
+.selected-movies {
+  margin-top: 30px;
+  list-style: none;
+  padding: 0;
+}
+
+.selected-movies li {
+  cursor: pointer;
+  background-color: #424242;
+  border: 1px solid #111111;
+  color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 10px;
+  transition: transform 0.2s ease-in-out;
+  list-style-type: none;
+}
+
+input[type="search"] {
+  width: 100%;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+input[type="search"]:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+}
+
+.img-poster {
+  box-shadow: 0 0 6px rgb(255, 255, 255);
+  height: 250px;
+  margin-top: 26px;
+  transition: transform 0.2s ease-in-out;
+  list-style-type: none;
+}

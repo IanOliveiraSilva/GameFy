@@ -13,15 +13,17 @@ body {
 
 
 .btn-primary {
-  background-color: #0F0F0F;
-  border-color: #ffd900;
-  color: #000000;
+  background: linear-gradient(to right, #3f063c, #000000);
+  border-color: #000000;
+  color: #ffffff;
   font-weight: bold;
 }
 
 .btn-primary:hover {
-  background-color: #e0a800;
-  border-color: #e0a800;
+  background: linear-gradient(to right, #000000, #3f063c);
+  transform: scale(1.05);
+  border-color: #000000;
+  color: #ffffff;
 }
 
 .profile-container {
@@ -29,22 +31,22 @@ body {
   align-items: center;
   padding: 20px;
   position: relative;
-  background-color: #EAAA00;
+  background: linear-gradient(to right, #000000, #3f063c);
+  color: white;
   border: 2px solid #000000;
   border-radius: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgb(233, 5, 241);
   text-align: center;
 }
 
 
-.suggestion:hover{ 
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3), 
-  inset 0px 0px 5px rgb(0, 0, 0); 
-  transform: scale(1.1) rotate(.5deg); 
-  border-radius: 50%; 
-  transition: all 0.5s ease-in-out; 
+.suggestion:hover {
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3),
+    inset 0px 0px 5px rgb(0, 0, 0);
+  transform: scale(1.1) rotate(.5deg);
+  border-radius: 50%;
+  transition: all 0.5s ease-in-out;
 }
-
 
 .profile-details {
   position: relative;
@@ -54,13 +56,13 @@ body {
 .profile-name {
   font-size: 24px;
   font-weight: bold;
-  color: #333333;
+  color: #ffffff;
   margin-bottom: 10px;
 }
 
 .profile-user {
   font-size: 16px;
-  color: #666666;
+  color: #ffffff;
   margin-top: -15px;
   margin-bottom: 30px;
 }
@@ -68,7 +70,7 @@ body {
 .profile-bio {
   font-size: 18px;
   font-weight: 500;
-  color: #333333;
+  color: #ffffff;
   margin-bottom: 20px;
 }
 
@@ -80,12 +82,12 @@ body {
 
 .profile-stat {
   font-size: 18px;
-  color: #000000;
+  color: #ffffff;
   transition: all 0.3s ease;
 }
 
 .profile-stat:hover {
-  color: #4d0240;
+  color: #9b9b9b;
 }
 
 .profile-stat .stat-count {
@@ -99,13 +101,13 @@ body {
   font-weight: bold;
 }
 
-.ul-profile{
+.ul-profile {
   text-align: center;
   padding-right: -50%;
 }
 
 .li-profile {
-  background-color: rgba(211, 211, 211, 0.878);
+  background: linear-gradient(to right, #3f063c, #000000);
   border-radius: 20px;
   padding: 5px;
   margin-bottom: 5px;
@@ -115,9 +117,9 @@ body {
 }
 
 .li-profile:hover {
-  transform: translateY(-7px);
-  box-shadow: 0 10px 15px rgba(255, 0, 0, 0.2);
-  background-color: rgba(155, 155, 155, 0.878);
+  transform: translateYrgb(0, 0, 0);
+  box-shadow: 0 0 10px rgb(233, 5, 241);
+  background-color: #971197;
 }
 
 .movie-poster {
@@ -133,7 +135,7 @@ body {
   list-style-type: none;
 }
 
-.movie-poster:hover{
+.movie-poster:hover {
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
   transform: scale(1.05);
 }
@@ -173,14 +175,11 @@ body {
 }
 
 hr {
-  height: 5px;
-  background: linear-gradient(to right, #000000, #202020, #474747);
-  border: none;
-  margin: 60px;
-  margin-left: 41px;
-  border-radius: 20px;
-  animation: gradient-animation 2s ease infinite;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height: 2px;
+  background-color: #ffffff;
+  margin: 20px 0;
+  border: 1px solid rgb(225, 84, 230);
+  box-shadow: 5px 5px 10px rgb(158, 4, 163);
 }
 
 .hr-bottom {
@@ -198,6 +197,7 @@ hr {
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -210,7 +210,14 @@ hr {
 #edit-profile-link {
   position: absolute;
   top: -39px;
+  color: #000000;
+  text-shadow: 0 0 10px #7e7e7e;
   right: 10px;
+}
+
+#edit-profile-link:hover {
+  color: #000000;
+  text-shadow: 0 0 10px #ffffff;
 }
 
 #gear-icon {
@@ -218,7 +225,13 @@ hr {
   cursor: pointer;
   position: absolute;
   top: 20px;
+  color: #ff00f2;
   left: 10px;
+}
+
+#gear-icon:hover{
+  color: #ff00f2;
+  text-shadow: 0 0 10px #ffffff;
 }
 
 .dropdown-content {
@@ -226,7 +239,7 @@ hr {
   position: absolute;
   background-color: #f9f9f9;
   min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
 
@@ -243,7 +256,7 @@ hr {
 
 #additionalInfo {
   opacity: 0;
-  color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
   transition: opacity 0.3s ease, transform 0.3s ease;
   text-decoration: none;
   text-align: center;
@@ -264,8 +277,8 @@ hr {
 
 
 #showMoreBtn {
-  background-color: rgba(211, 211, 211, 0.878);
-  color: rgb(0, 0, 0);
+  background: linear-gradient(to right, #3f063c, #000000);
+  color: rgb(255, 255, 255);
   border: none;
   text-align: center;
   text-decoration: none;
@@ -278,11 +291,9 @@ hr {
 }
 
 #showMoreBtn:hover {
-  background-color: #4a4a4a;
-  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(to right, #000000, #3f063c);
+  transform: scale(1.05);
+  border-color: #000000;
+  box-shadow: 0 0 10px rgb(233, 5, 241);
+  color: #ffffff;
 }
-
-
-
-
-

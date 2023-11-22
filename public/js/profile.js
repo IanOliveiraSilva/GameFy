@@ -1,19 +1,19 @@
 const token = localStorage.getItem('token')
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const resultProfile = document.querySelector('#results');
+  const resultProfile = document.querySelector('#results');
 
-    const response = await fetch('api/user/profile', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+  const response = await fetch('api/user/profile', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
 
-    const profileData = await response.json();
+  const profileData = await response.json();
 
-    const details = document.createElement('div');
-    details.innerHTML =
+  const details = document.createElement('div');
+  details.innerHTML =
     `
     <div class="profile-container">
             <div class="profile-details">
@@ -37,10 +37,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="profile-info">
                 <br>
                        
-                <li id="showMoreBtn" class="list-group-item li-profile uppercase-text">
+                <li id="showMoreBtn" class="list-group-item uppercase-text">
                 <i class="fas fa-eye"></i> <span>Ver Mais</span>
             </li>
-                <ul class="list-group ul-profile">
+                <ul class="list-group ul-profile text-white">
 
               <div id="additionalInfo" style="display: none;">
 
@@ -74,49 +74,68 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ${profileData.body.profile.socialmediatiktok !== null && profileData.body.profile.socialmediax !== "null" && profileData.body.profile.socialmediax !== "" ? profileData.body.profile.socialmediatiktok : '___'}
                     </a>
                     </strong>
-                    </li><br>
+                    </li><br><br><br>
               </div>
-              
-              </ul> <hr>
-                    <ul id="filmes-favoritos">
-                    </ul><hr><br>
-
-                    <a href="/getAllReviews" class="btn btn-primary text-warning btn-link profile-stat">
+              </ul><br>
+                    <div class="text-center">
+                    <a href="/profile/reviews" class="btn btn-primary">
                     Reviews:
-                    <span class="stat-count">${profileData.body.profile.contadorreviews !== null ? profileData.body.profile.contadorreviews : 0}
+                    <span class="stat-count">
+                    ${profileData.body.profile.contadorreviews !== null ? profileData.body.profile.contadorreviews : 0}
+                    </span>
+                    </a>&emsp;
+
+                    <a href="/getAllLists" class="btn btn-primary">
+                    <i class="fas fa-list-ul"></i> 
+                    <span class="stat-count">
+                    ${profileData.body.profile.contadorlists !== null ? profileData.body.profile.contadorlists : 0}
+                    </span>
+                    </a>&emsp;
+
+                    <a href="/createList" class="btn btn-primary">
+                    <span class="stat-count">
+                    Criar Lista
                     </span>
                     </a>
-                    <canvas id="myChart"></canvas><br>
-                    </ul>
-            <hr class="hr-bottom">
-                    <div class="text-center">
                     
-                    <a href="/getAllLists" class="btn btn-primary text-warning btn-link profile-stat"><i class="fas fa-list-ul"></i> <span class="stat-count">${profileData.body.profile.contadorlists !== null ? profileData.body.profile.contadorlists : 0}</span></a>
-                    <a href="/createList" class="btn btn-primary text-warning btn-link profile-stat"><span class="stat-count">Criar Lista</span></a>
                     <a href="/" class="back-link d-block mt-4 text-center">
-                    <i class="fa-solid fa-house" style="color: #000000; font-size: 30px;"></i> 
-                    
+                    <i class="fa-solid fa-house" style="color: #ffffff; font-size: 30px;"></i> 
                     </div>
             </div>
                 </div>
             </div>
     `
-    resultProfile.innerHTML = '';
-    resultProfile.appendChild(details);
+  resultProfile.innerHTML = '';
+  resultProfile.appendChild(details);
 
-    const editProfileLink = document.querySelector('#edit-profile-link');
-    editProfileLink.addEventListener('click', () => {
-      localStorage.setItem('ProfileName', profileData.body.profile.givenname);
-      localStorage.setItem('familyname', profileData.body.profile.familyname);
-      localStorage.setItem('bio', profileData.body.profile.bio);
-      localStorage.setItem('location', profileData.body.profile.location);
-      localStorage.setItem('socialmediainstagram', profileData.body.profile.socialmediainstagram);
-      localStorage.setItem('socialmediatiktok', profileData.body.profile.socialmediatiktok);
-      localStorage.setItem('socialmediax', profileData.body.profile.socialmediax);
-      localStorage.setItem('birthday', profileData.body.profile.birthday);
-      localStorage.setItem('userprofile', profileData.body.profile.userprofile);
-      localStorage.setItem('icon', profileData.body.profile.icon);
-    });
+  let isHidden = true;
 
-    
+  const showMoreBtn = document.getElementById("showMoreBtn");
+  const additionalInfo = document.getElementById("additionalInfo");
+
+  showMoreBtn.addEventListener("click", () => {
+    isHidden = !isHidden;
+    additionalInfo.style.display = isHidden ? "none" : "block";
+
+    additionalInfo.classList.toggle("show");
+    showMoreBtn.innerHTML = `${isHidden ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>'} <span>${isHidden ? 'Ver Mais' : 'Ver Menos'}</span>`;
+
+  });
+
+
+  const editProfileLink = document.querySelector('#edit-profile-link');
+  editProfileLink.addEventListener('click', () => {
+    localStorage.setItem('ProfileName', profileData.body.profile.givenname);
+    localStorage.setItem('familyname', profileData.body.profile.familyname);
+    localStorage.setItem('bio', profileData.body.profile.bio);
+    localStorage.setItem('location', profileData.body.profile.location);
+    localStorage.setItem('socialmediainstagram', profileData.body.profile.socialmediainstagram);
+    localStorage.setItem('socialmediatiktok', profileData.body.profile.socialmediatiktok);
+    localStorage.setItem('socialmediax', profileData.body.profile.socialmediax);
+    localStorage.setItem('birthday', profileData.body.profile.birthday);
+    localStorage.setItem('userprofile', profileData.body.profile.userprofile);
+    localStorage.setItem('icon', profileData.body.profile.icon);
+  });
+
+
 })

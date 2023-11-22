@@ -4,7 +4,7 @@ const userController = require('../controller/user.controller');
 
 router.post('/create-review/:id', userController.AuthMiddleware, reviewController.createReview);
 
-router.get('/allReviews/', userController.AuthMiddleware, reviewController.getAllReviews);
+router.get('/profile/reviews/', userController.AuthMiddleware, reviewController.getAllReviews);
 
 router.get('/game-reviews/:id', userController.AuthMiddleware, reviewController.getAllReviewsFromGames);
 

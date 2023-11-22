@@ -8,7 +8,8 @@ const routes = [
   { path: '/profile', view: 'profile'},
   { path: '/updateProfile', view: 'updateProfile'},
   { path: '/game-reviews/:id', view: 'getReviewsByGame'},
-  { path: '/review/:id', view: 'getReviewById'}
+  { path: '/review/:id', view: 'getReviewById'},
+  { path: '/profile/reviews/', view: 'getAllReviews'}
 ];
 
 routes.forEach((route) => {

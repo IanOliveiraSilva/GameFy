@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const pool = new Pool({
-  connectionString: `postgresql://postgres:123@localhost:5432/game_review_db`
+  connectionString: `postgres://aqtuzzwb:yqtOcjwCQ9phNUXpoNTYXcj8w3bA3lNm@isabelle.db.elephantsql.com/aqtuzzwb`
 });
 pool.on('connect', () => {
   console.log('Base de Dados conectado com sucesso!');

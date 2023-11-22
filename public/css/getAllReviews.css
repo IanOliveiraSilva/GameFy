@@ -84,13 +84,12 @@ hr {
 .star {
   font-size: 1.5em;
   cursor: pointer;
-  color: #6e42c1;
+  color: #8a52f1;
   transition: color 0.3s, text-shadow 0.3s;
   border: solid;
   border-radius: 25px;
   width: 110px;
   padding: 5px;
-  text-shadow: 0 0 10px #e70fdc;
 }
 
 .genre-filter {

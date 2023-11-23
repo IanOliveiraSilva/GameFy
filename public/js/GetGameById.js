@@ -75,20 +75,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             <strong><button id="add-watchlist-button" draggable="true" class="btn-unstyled-clock"><i id="watchlist-icon" class="far fa-clock"></i></button></strong>
         </div>
         <div class="col-md-8">
-            <div class="plot-container">
+            <div class="plot-container list-unstyled">
                 <h3 class="movie-title">${detailsData.body.gameData.name}</h3>
                 ${detailsData.body.mediagames.medianotas !== 0 ? generateStarRating(detailsData.body.mediagames.medianotas) : ''}
                 ${detailsData.body.gameData.description}
+                <br>
+                <li><strong>Lançamento:</strong> ${detailsData.body.gameData.released}</li>
+                <li><strong>Gêneros:</strong> ${detailsData.body.gameData.genres}</li>
+                <li><strong>Duração:</strong> ${detailsData.body.gameData.playtime} Horas</li>
+                <li><strong>Plataformas:</strong> ${detailsData.body.gameData.platforms}</li>
+                <li><strong>Site:</strong> <a href="${detailsData.body.gameData.website}" target="_blank">${detailsData.body.gameData.website}</a></li>
             </div><br>
-            <div class="info-container">
-            <ul class="list-unstyled profile-list">
-            <li><strong>Lançamento:</strong> ${detailsData.body.gameData.released}</li>
-            <li><strong>Gêneros:</strong> ${detailsData.body.gameData.genres}</li>
-            <li><strong>Duração:</strong> ${detailsData.body.gameData.playtime} Horas</li>
-            <li><strong>Plataformas:</strong> ${detailsData.body.gameData.platforms}</li>
-            <li><strong>Site:</strong> <a href="${detailsData.body.gameData.website}" target="_blank">${detailsData.body.gameData.website}</a></li>
-          </ul>
-        </div><br>
             <li style="list-style-type: none;" id="create-review-button" class="create-review-button">
                     <i class="fas fa-pencil-alt "></i> <strong>Criar uma review</strong>
             </li>

@@ -149,9 +149,9 @@ exports.getReviewById = async (req, res) => {
     const review = await db.query(
       `SELECT r.id, r.userid, u.username, up.icon, r.gameid, g.title, g.gameid, r.rating, r.review, r.ispublic, r.created_at 
       FROM reviews r 
-      INNER JOIN games g ON r.gameid = g.gameid
-      INNER JOIN user_profile up ON r.userId = up.userId
-      INNER JOIN users u ON r.userId = u.id
+      LEFT JOIN games g ON r.gameid = g.gameid
+      LEFT JOIN user_profile up ON r.userId = up.userId
+      LEFT JOIN users u ON r.userId = u.id
       WHERE r.id = $1 and r.ispublic = true`,
       [id]
     );

@@ -105,28 +105,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (reviewsData[0].review) {
             const commentCell = document.createElement('div');
             commentCell.classList.add('profile-image-header-review-container')
-            commentCell.innerHTML = `
-            <a href='/profile' class="profile-link">
-            <img class="profile-image-header-review" src="${reviewsData[0].icon}">
-            <div class="user-info">
-                <p class="username">${reviewsData[0].username}</p>
-                <span class="span-text">${reviewsData[0].review}</span>
-            </div>
-            </a>
-            `;
-            commentCell.classList.add('span-text-border');
-            reviewsContainer.appendChild(commentCell);
-        } else {
-            const commentCell = document.createElement('div');
-            commentCell.classList.add('profile-image-header-review-container')
-            commentCell.innerHTML = `
-            <a href='/profile' class="profile-link">
-            <img class="profile-image-header-review" src="${reviewsData[0].icon}">
-            <div class="user-info">
-                <p class="username">${reviewsData[0].username}</p>
-            </div>
-            </a>
-            `;
+            if (reviewsData[0].icon != null) {
+                commentCell.innerHTML = `
+                <a href='/profile' class="profile-link">
+                <img class="profile-image-header-review" src="${reviewsData[0].icon}">
+                <div class="user-info">
+                    <p class="username">${reviewsData[0].username}</p>
+                    <span class="span-text">${reviewsData[0].review}</span>
+                </div>
+                </a>
+                `;
+            } else {
+                commentCell.innerHTML = `
+                <a href='/profile' class="profile-link">
+                <img class="profile-image-header-review" src="https://media.tenor.com/U282vYfv7xAAAAAd/gato-barril.gif">
+                <div class="user-info">
+                    <p class="username">${reviewsData[0].username}</p>
+                    <span class="span-text">${reviewsData[0].review}</span>
+                </div>
+                </a>
+                `;
+            }
             commentCell.classList.add('span-text-border');
             reviewsContainer.appendChild(commentCell);
         }
@@ -150,7 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 localStorage.setItem('review', reviewsData[0].review);
             });
 
-            
+
             let popup = document.getElementById('deletePopup');
             let closeButtonDelete = document.getElementById('closePopupDelete');
 
@@ -164,13 +163,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             closeButtonDelete.addEventListener('click', function () {
                 document.getElementById('deletePopup').classList.remove('active');
             });
-            
+
             window.addEventListener('click', function (event) {
                 if (event.target == popup) {
                     popup.classList.remove('active');
                 }
             });
-        
+
 
             const shareButton = document.createElement('a');
             shareButton.innerHTML = `<i class="fa-solid fa-share action-cell"></i>`;

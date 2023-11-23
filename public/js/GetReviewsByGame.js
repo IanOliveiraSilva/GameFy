@@ -94,7 +94,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const ratingRow = document.createElement('tr');
             ratingRow.addEventListener('click', function () {
                 localStorage.setItem('reviewId', review.id);
-                localStorage.setItem('username', review.username)
                 window.location.href = `/review/${review.id}`;
             });
 

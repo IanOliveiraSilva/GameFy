@@ -1,34 +1,3 @@
-// function generateStarRating(rating) {
-//     const maxRating = 5;
-//     const roundedRating = Math.round(rating * 2) / 2;
-//     const fullStars = Math.floor(roundedRating);
-//     const halfStar = roundedRating % 1 !== 0;
-//     const emptyStars = maxRating - fullStars - (halfStar ? 1 : 0);
-
-//     const ratingContainer = document.createElement('div');
-//     ratingContainer.classList.add('star');
-
-//     for (let i = 0; i < fullStars; i++) {
-//         const star = document.createElement('span');
-//         star.textContent = '★';
-//         ratingContainer.appendChild(star);
-//     }
-
-//     if (halfStar) {
-//         const halfStar = document.createElement('span');
-//         halfStar.textContent = '★';
-//         ratingContainer.appendChild(halfStar);
-//     }
-
-//     for (let i = 0; i < emptyStars; i++) {
-//         const star = document.createElement('span');
-//         star.textContent = '☆';
-//         ratingContainer.appendChild(star);
-//     }
-
-//     return ratingContainer;
-// }
-
 function generateStarRating(rating) {
     const maxRating = 5;
     const roundedRating = Math.round(rating * 2) / 2;
@@ -53,7 +22,6 @@ function generateStarRating(rating) {
 
 document.addEventListener('DOMContentLoaded', async () => {
     // FUNCTIONS
-
     const resultsList = document.querySelector('#results');
     const parts = window.location.pathname.split('/');
     const gameId = parts.pop();

@@ -13,8 +13,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const profileData = await response.json();
 
   const details = document.createElement('div');
-  details.innerHTML =
-    `
+
+  if (profileData.body.profile.familyname != null) {
+    details.innerHTML =
+      `
     <div class="profile-container">
             <div class="profile-details">
             <div class="ul-profile">
@@ -105,8 +107,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
             </div>
     `
-  resultProfile.innerHTML = '';
-  resultProfile.appendChild(details);
+    resultProfile.innerHTML = '';
+    resultProfile.appendChild(details);
+  } else {
+    details.innerHTML =
+      `
+    <div class="profile-container">
+           <h2 class="profile-name"> Parece que você ainda não criou o seu perfil, aperte no icone de lapis para criar!</h2>
+           <a href="/updateProfile" id="edit-profile-link"><br><br>
+           <i class="fas fa-pencil-alt" style="font-size: 30px;"></i>
+           </a>
+    </div>
+    `
+    resultProfile.innerHTML = '';
+    resultProfile.appendChild(details);
+  }
 
   let isHidden = true;
 

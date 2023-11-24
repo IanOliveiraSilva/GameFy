@@ -72,6 +72,14 @@ async function register() {
     localStorage.setItem('token', data.token);
     localStorage.setItem('username', data.user.username);
     window.location.href = '/';
+    const userProfileResponse = await fetch('/api/user/profile/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${data.token}`
+      },
+      body: JSON.stringify({userId: data.id, name: username, userProfileTag: username})
+    });
   } else {
     alert(data.message);
   }

@@ -23,9 +23,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const actualbirthday = localStorage.getItem('birthday');
     const birthdayElement = document.getElementById('birthday');
 
-    const parts = actualbirthday.split('/');
-    const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-    birthdayElement.value = formattedDate;
+    // const parts = actualbirthday.split('/');
+    // const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+    // birthdayElement.value = formattedDate;
 
     const actualsocialmediainstagram = localStorage.getItem('socialmediainstagram');
     const socialmediainstagramElement = document.getElementById('socialmediaInstagram');

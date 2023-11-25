@@ -4,6 +4,10 @@ const axios = require("axios");
 const RAWG_API_KEY = process.env.RAWG_API_KEY;
 const db = require("../config/db");
 
+
+const hltb = require('howlongtobeat');
+const hltbService = new hltb.HowLongToBeatService();
+
 exports.getGameById = async (req, res) => {
     const id = req.params.id;
 
@@ -23,10 +27,15 @@ exports.getGameById = async (req, res) => {
                 gameId: game.id,
                 developers: game.developers.map(dev => dev.name),
                 publishers: game.publishers.map(pub => pub.name),
-                tags: game.tags.map(tag => tag.name),
-                videos: game.clip,
-                stores: game.stores.map(store => store.store.name)
+                tags: game.tags.map(tag => tag.name)
             };
+
+            const hltbResult = await hltbService.search(game.name);
+            if (hltbResult && hltbResult.length > 0) {
+                gameData.gameplayMain = hltbResult[0].gameplayMain;
+                gameData.gameplayMainExtra = hltbResult[0].gameplayMainExtra;
+                gameData.gameplayCompletionist = hltbResult[0].gameplayCompletionist;
+            }
 
             let { rows: [mediagames] } = await db.query(
                 `
@@ -55,6 +64,7 @@ exports.getGameById = async (req, res) => {
         return res.status(500).json({ message: 'Erro ao pesquisar jogo' });
     }
 };
+
 
 exports.getGamesTendency = async (req, res) => {
     try {

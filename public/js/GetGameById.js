@@ -59,11 +59,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <h4 class="bold">Description</h4>
                     <p>${detailsData.body.gameData.description}</p>
                     <h4 class="bold">Additional info</h4>
-                    <ul style="list-style-type: none;">
+                    <ul style="list-style-type: none; padding-left: 0;">
                         <li><strong>Release Date:</strong> ${detailsData.body.gameData.released}</li>
                         <li><strong>Genres:</strong> ${detailsData.body.gameData.genres.join(', ')}</li>
                         <li><strong>Platforms:</strong> ${detailsData.body.gameData.platforms.join(', ')}</li>
-                        <li><strong>Website:</strong> <a href="${detailsData.body.gameData.website}" target="_blank">${detailsData.body.gameData.website}</a></li>
+                        <li><strong>Website:</strong> <a href="${detailsData.body.gameData.website}" target="_blank">${detailsData.body.gameData.website}</a></li><br>
+                        <h4 class="bold">Playtime</h4>
+                        <li><strong>Main Story Length:</strong> ${detailsData.body.gameData.gameplayMain} hours</li>
+                        <li><strong>Main + Extras Length:</strong> ${detailsData.body.gameData.gameplayMainExtra} hours</li>
+                        <li><strong>Completionist Length:</strong> ${detailsData.body.gameData.gameplayCompletionist} hours</li>
                     </ul><br>
                 </div>
                 <div class="user-actions">
@@ -76,7 +80,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <a class="text-white" href="/">Back to home page</a>
             </div>
         </div>
-    </div>    
+    </div>
+    
     `
     resultsList.innerHTML = '';
     resultsList.appendChild(details);

@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <button id="add-favorite-button" draggable="true" class="btn-unstyled"><i id="favorite-icon" class="far fa-heart"></i></button> 
                     <button id="add-watchlist-button" draggable="true" class="btn-unstyled-clock"><i id="watchlist-icon" class="far fa-clock"></i></button>
                 </div>
-                <div class="game-info text-white">
+                <div class="text-white">
                     <h4 class="bold">Game Info</h4>
                     <p><strong>Developers:</strong> ${detailsData.body.gameData.developers.join(', ')}</p>
                     <p><strong>Publishers:</strong> ${detailsData.body.gameData.publishers.join(', ')}</p>
@@ -58,17 +58,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="plot-container list-unstyled">
                     <h4 class="bold">Description</h4>
                     <p>${detailsData.body.gameData.description}</p>
+                </div>
+                <div class="plot-container list-unstyled">
                     <h4 class="bold">Additional info</h4>
                     <ul style="list-style-type: none; padding-left: 0;">
                         <li><strong>Release Date:</strong> ${detailsData.body.gameData.released}</li>
                         <li><strong>Genres:</strong> ${detailsData.body.gameData.genres.join(', ')}</li>
                         <li><strong>Platforms:</strong> ${detailsData.body.gameData.platforms.join(', ')}</li>
-                        <li><strong>Website:</strong> <a href="${detailsData.body.gameData.website}" target="_blank">${detailsData.body.gameData.website}</a></li><br>
-                        <h4 class="bold">Playtime</h4>
+                        <li><strong>Website:</strong> <a href="${detailsData.body.gameData.website}" target="_blank">${detailsData.body.gameData.website}</a></li>
+                    </ul>
+                </div>
+                <div class="plot-container list-unstyled">
+                    <h4 class="bold">Playtime</h4>
+                    <ul style="list-style-type: none; padding-left: 0;">
                         <li><strong>Main Story Length:</strong> ${detailsData.body.gameData.gameplayMain} hours</li>
                         <li><strong>Main + Extras Length:</strong> ${detailsData.body.gameData.gameplayMainExtra} hours</li>
                         <li><strong>Completionist Length:</strong> ${detailsData.body.gameData.gameplayCompletionist} hours</li>
-                    </ul><br>
+                    </ul>
                 </div>
                 <div class="user-actions">
                     <button id="create-review-button" class="btn btn-primary mt-3">
@@ -98,3 +104,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = `/game-reviews/${detailsData.body.gameData.gameId}`;
     });
 })
+
+function toggleDescription() {
+    var description = document.getElementById('description');
+    var button = document.getElementById('toggleButton');
+
+    if (description.classList.contains('collapsed')) {
+        description.classList.remove('collapsed');
+        button.innerText = 'Read less';
+    } else {
+        description.classList.add('collapsed');
+        button.innerText = 'Read more';
+    }
+}

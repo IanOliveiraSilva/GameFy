@@ -32,7 +32,7 @@ label {
 }
 
 label:hover {
-  color: #6c5ce7;
+  color: #e70fdc;
 }
 
 
@@ -82,25 +82,25 @@ input[type="checkbox"] {
 .star {
   font-size: 2em;
   cursor: pointer;
-  color: #6e42c1;
+  color: #e70fdc;
   transition: color 0.3s, text-shadow 0.3s;
 }
 
 .star.selected {
-  color: #e70fdc;
+  color: #ff00f2;
   text-shadow: 0 0 10px #e70fdc;
 }
 
 .star:hover {
-  color: #e70fdc;
-  text-shadow: 0 0 10px #e70fdc;
+  color: #ff00f2;
+  text-shadow: 0 0 10px #ff00f2;
 }
 
 
 #comment {
   width: 100%;
   padding: 12px;
-  border: 2px solid #6c5ce7;
+  border: 2px solid #e70fdc;
   border-radius: 10px;
   font-size: 18px;
   resize: vertical;
@@ -120,7 +120,7 @@ input[type="checkbox"] {
   appearance: none;
   width: 30px;
   height: 30px;
-  border: 3px solid #6c5ce7;
+  border: 3px solid #e70fdc;
   background-color: #ffffff;
   border-radius: 5px;
   outline: none;
@@ -134,8 +134,8 @@ input[type="checkbox"] {
 }
 
 #isPublic:checked {
-  background-color: #6c5ce7;
-  border-color: #6c5ce7;
+  background-color: #ff00f2;
+  border-color: rgb(18, 122, 219);
   color: #ffffff;
 }
 
@@ -150,7 +150,7 @@ input[type="checkbox"] {
 
 
 .btn-primary {
-  background-color: #6c5ce7;
+  background-color: #e70fdc;
   border-color: #2d3436;
   color: #ffffff;
   font-weight: bold;

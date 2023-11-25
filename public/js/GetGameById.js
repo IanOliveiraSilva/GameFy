@@ -34,35 +34,49 @@ document.addEventListener('DOMContentLoaded', async () => {
     const details = document.createElement('div');
     details.innerHTML =
         `
-    <div class="profile-container">
-    <div class="row">
-        <div class="col-md-4 text-center">
-            <img class="img-poster img-fluid img-poster-hover" src="${detailsData.body.gameData.image}" alt="${detailsData.body.gameData.name} poster">
-            <strong><button id="add-favorite-button" draggable="true" class="btn-unstyled-eye"><i id="played-icon" class="fa fa-gamepad"></i></button></strong>&emsp;
-            <strong><button id="add-favorite-button" draggable="true" class="btn-unstyled"><i id="favorite-icon" class="far fa-heart"></i></button></strong>&emsp;
-            <strong><button id="add-watchlist-button" draggable="true" class="btn-unstyled-clock"><i id="watchlist-icon" class="far fa-clock"></i></button></strong>
+        <div class="profile-container">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <div class="game-header">
+                    <h3 class="game-title text-white bold">${detailsData.body.gameData.name}</h3>
+                    ${detailsData.body.mediagames.medianotas !== 0 ? generateStarRating(detailsData.body.mediagames.medianotas) : ''}
+                </div>
+                <img class="img-poster img-fluid img-poster-hover" src="${detailsData.body.gameData.image}" alt="${detailsData.body.gameData.name} poster">
+                <div class="game-actions">
+                    <button id="add-favorite-button" draggable="true" class="btn-unstyled-eye"><i id="played-icon" class="fa fa-gamepad"></i></button> 
+                    <button id="add-favorite-button" draggable="true" class="btn-unstyled"><i id="favorite-icon" class="far fa-heart"></i></button> 
+                    <button id="add-watchlist-button" draggable="true" class="btn-unstyled-clock"><i id="watchlist-icon" class="far fa-clock"></i></button>
+                </div>
+                <div class="game-info text-white">
+                    <h4 class="bold">Game Info</h4>
+                    <p><strong>Developers:</strong> ${detailsData.body.gameData.developers.join(', ')}</p>
+                    <p><strong>Publishers:</strong> ${detailsData.body.gameData.publishers.join(', ')}</p>
+                    <p><strong>Tags:</strong> ${detailsData.body.gameData.tags.join(', ')}</p>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="plot-container list-unstyled">
+                    <h4 class="bold">Description</h4>
+                    <p>${detailsData.body.gameData.description}</p>
+                    <h4 class="bold">Additional info</h4>
+                    <ul style="list-style-type: none;">
+                        <li><strong>Release Date:</strong> ${detailsData.body.gameData.released}</li>
+                        <li><strong>Genres:</strong> ${detailsData.body.gameData.genres.join(', ')}</li>
+                        <li><strong>Platforms:</strong> ${detailsData.body.gameData.platforms.join(', ')}</li>
+                        <li><strong>Website:</strong> <a href="${detailsData.body.gameData.website}" target="_blank">${detailsData.body.gameData.website}</a></li>
+                    </ul><br>
+                </div>
+                <div class="user-actions">
+                    <button id="create-review-button" class="btn btn-primary mt-3">
+                        <i class="fas fa-pencil-alt "></i> <strong>Create a review</strong>
+                    </button>
+                    <button id="get-review-button" class="btn btn-primary mt-3">View Reviews</button>
+                    <button id="get-list-button" class="btn btn-primary mt-3">View Lists</button>
+                </div>
+                <a class="text-white" href="/">Back to home page</a>
+            </div>
         </div>
-        <div class="col-md-8">
-            <div class="plot-container list-unstyled">
-                <h3 class="movie-title">${detailsData.body.gameData.name}</h3>
-                ${detailsData.body.mediagames.medianotas !== 0 ? generateStarRating(detailsData.body.mediagames.medianotas) : ''}
-                ${detailsData.body.gameData.description}
-                <br>
-                <li><strong>Lançamento:</strong> ${detailsData.body.gameData.released}</li>
-                <li><strong>Gêneros:</strong> ${detailsData.body.gameData.genres}</li>
-                <li><strong>Duração:</strong> ${detailsData.body.gameData.playtime} Horas</li>
-                <li><strong>Plataformas:</strong> ${detailsData.body.gameData.platforms}</li>
-                <li><strong>Site:</strong> <a href="${detailsData.body.gameData.website}" target="_blank">${detailsData.body.gameData.website}</a></li>
-            </div><br>
-            <li style="list-style-type: none;" id="create-review-button" class="create-review-button">
-                    <i class="fas fa-pencil-alt "></i> <strong>Criar uma review</strong>
-            </li>
-            <button id="get-review-button" class="btn btn-primary mt-3">Ver Reviews</button>&emsp;
-            <button id="get-list-button" class="btn btn-primary mt-3">Ver Listas</button><br> <br> 
-            &emsp;<a class="text-white" href="/">Voltar para a página inicial</a>
-        </div>
-    </div>
-    </div>        
+    </div>    
     `
     resultsList.innerHTML = '';
     resultsList.appendChild(details);

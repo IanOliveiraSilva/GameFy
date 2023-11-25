@@ -18,11 +18,14 @@ exports.getGameById = async (req, res) => {
                 genres: game.genres.map(genre => genre.name),
                 description: game.description,
                 image: game.background_image,
-                metacritic: game.metacritic,
-                playtime: game.playtime,
                 platforms: game.platforms.map(platform => platform.platform.name),
                 website: game.website,
                 gameId: game.id,
+                developers: game.developers.map(dev => dev.name),
+                publishers: game.publishers.map(pub => pub.name),
+                tags: game.tags.map(tag => tag.name),
+                videos: game.clip,
+                stores: game.stores.map(store => store.store.name)
             };
 
             let { rows: [mediagames] } = await db.query(

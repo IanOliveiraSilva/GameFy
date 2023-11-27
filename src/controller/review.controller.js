@@ -230,9 +230,9 @@ exports.deleteReview = async (req, res) => {
 
 exports.getAllReviewsFromUser = async (req, res) => {
   try {
-    const userProfile = req.params.userProfile;
+    const userProfile = req.params.userProfile.toLowerCase();
 
-    const userIdQuery = await db.query('SELECT userId FROM user_profile WHERE userProfile = $1', [userProfile]);
+    const userIdQuery = await db.query('SELECT userId FROM user_profile WHERE LOWER(userProfile) LIKE $1', [userProfile]);
 
     if (userIdQuery.rows.length === 0) {
       return res.status(400).json({

@@ -79,7 +79,7 @@ exports.getAllLists = async (req, res) => {
         const userId = req.user.id;
 
         const lists = await db.query(
-            `SELECT l.id, l.gameIds, u.username AS user, l.name AS list_name, l.description AS list_description, l.created_at AS Created_At
+            `SELECT l.id,l.gameIds, l.ispublic, u.username AS user, l.name AS list_name, l.description AS list_description, l.created_at AS Created_At
             FROM lists l
             JOIN users u ON l.userId = u.id
             WHERE u.id = $1
@@ -114,6 +114,7 @@ exports.getListById = async (req, res) => {
             l.name AS list_name,
             l.description AS list_description, 
             l.created_at AS Created_At,
+            l.ispublic,
             COUNT(DISTINCT game) AS games_count
             FROM lists l
             JOIN users u ON l.userId = u.id

@@ -25,6 +25,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       const listName = document.createElement('p');
       listName.textContent = listsData[0].list_name;
       listName.classList.add('title', 'uppercase-text');
+
+      if(listsData[0].ispublic == false){
+        listName.innerHTML = `${listsData[0].list_name} <i class="fa fa-lock" style="color: #ffffff;"></i>`;
+      }
   
       const hr = document.createElement('hr');
   

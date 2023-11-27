@@ -59,6 +59,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       const nameText = document.createElement('p');
       nameText.textContent = list.list_name;
 
+      if(list.ispublic == false){
+        nameText.innerHTML = `${list.list_name} <i class="fa fa-lock" style="color: #ffffff;"></i>`;
+      }
+
       const descriptionText = document.createElement('span');
       descriptionText.textContent = list.list_description;
 

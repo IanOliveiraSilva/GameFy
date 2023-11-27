@@ -137,33 +137,6 @@ function generateStarRating(rating) {
           const dateCell = document.createElement('td');
           dateCell.textContent = `${formattedDay}/${formattedMonth}`;
   
-          const editButton = document.createElement('a');
-          editButton.innerHTML = '<i class="fas fa-pencil-alt"></i>';
-          editButton.classList.add('edit-button');
-          editButton.href = '/updateReview';
-          editButton.addEventListener('click', () => {
-            localStorage.setItem('reviewId', review.id);
-            localStorage.setItem('rating', review.rating);
-            localStorage.setItem('review', review.review);
-            localStorage.setItem('movieTitle', review.title);
-          });
-  
-          const deleteButton = document.createElement('a');
-          deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
-          deleteButton.classList.add('delete-button');
-          deleteButton.href = '/getAllReviews'
-          deleteButton.addEventListener('click', () => {
-            const confirmDelete = confirm('Tem certeza que deseja excluir a review?');
-            if (confirmDelete) {
-              const response = fetch(`/api/review/?id=${encodeURIComponent(review.id)}`, {
-                method: 'DELETE',
-                headers: {
-                  'Authorization': `Bearer ${token}`
-                }
-              });
-            }
-          });
-  
           const commentButton = document.createElement('a');
           if (review.comment_count > 0) {
             commentButton.innerHTML = `<i class="fas fa-comment"></i> ${review.comment_count}`;
@@ -177,9 +150,6 @@ function generateStarRating(rating) {
           });
   
           const actionsCell = document.createElement('td');
-          actionsCell.appendChild(editButton);
-          actionsCell.insertAdjacentHTML('beforeend', '&emsp;');
-          actionsCell.appendChild(deleteButton);
           actionsCell.insertAdjacentHTML('beforeend', '&emsp;');
           actionsCell.appendChild(commentButton);
   

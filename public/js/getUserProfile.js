@@ -22,17 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     <div class="profile-container">
             <div class="profile-details">
             <div class="ul-profile">
-            <div class="dropdown">
-            <i class="fas fa-gear" id="gear-icon"></i>
-            <div class="dropdown-content" id="dropdown-options">
-            <a href="/changePassword">Trocar senha</a>
-            </div>
-            </div>
-           
-            <a href="/updateProfile" id="edit-profile-link"><br><br>
-            <i class="fas fa-pencil-alt" style="font-size: 30px;"></i>
-            </a>
-        
+                <img class="profile-image" src="${profileData.body.profile.icon ? profileData.body.profile.icon : 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.webp'}" alt="Ícone do perfil do usuário"/>
                 <h1 class="profile-name">${profileData.body.profile.givenname} ${profileData.body.profile.familyname}</h1> 
                 <p class="profile-user">@${profileData.body.profile.userprofile}</p>
                 <p class="profile-bio">${profileData.body.profile.bio}</p>
@@ -82,7 +72,7 @@ document.addEventListener('DOMContentLoaded', async () => {
               </div>
               </ul><br>
                     <div class="text-center">
-                    <a href="/profile/reviews" class="btn btn-primary">
+                    <a href="/reviews/${profileData.body.profile.userprofile}" class="btn btn-primary">
                     Reviews:
                     <span class="stat-count">
                     ${profileData.body.profile.contadorreviews !== null ? profileData.body.profile.contadorreviews : 0}
@@ -95,12 +85,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ${profileData.body.profile.contadorlists !== null ? profileData.body.profile.contadorlists : 0}
                     </span>
                     </a>&emsp;
-
-                    <a href="/createList" class="btn btn-primary">
-                    <span class="stat-count">
-                    Criar Lista
-                    </span>
-                    </a>
                     
                     <a href="/" class="back-link d-block mt-4 text-center">
                     <i class="fa-solid fa-house" style="color: #ffffff; font-size: 30px;"></i> 

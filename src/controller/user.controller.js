@@ -230,7 +230,9 @@ exports.getProfileByUser = async (req, res) => {
     // Consulta o perfil do usuário
     const { rows: [userProfile] } = await db.query(
       `SELECT u.id, u.userid, u.name as givenName, u.familyname, u.bio, u.location, u.birthday, u.socialmediainstagram, u.socialmediax, u.socialmediatiktok, u.userprofile, 
-      u.icon
+      u.icon, 
+      (SELECT COUNT(*) FROM reviews WHERE userId = $1) AS contadorreviews, 
+      (SELECT COUNT(*) FROM lists WHERE userId = $1) AS contadorlists 
       FROM user_profile u
       WHERE u.userId = $1`,
       [userId]

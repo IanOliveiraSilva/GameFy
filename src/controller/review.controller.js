@@ -100,8 +100,12 @@ exports.getAllReviews = async (req, res) => {
       `SELECT r.id, r.userid, r.gameId, g.title, g.gameId, r.rating, r.review, r.ispublic, r.created_at
       FROM reviews r
       JOIN games g ON r.gameId = g.gameid 
+      JOIN users ON r.userId = users.id
+      WHERE r.userid = ${userId} AND r.isPublic
       GROUP BY r.id, g.title, g.gameId
+      
       ORDER BY ${orderBy}
+      
       `,
     );
 
@@ -221,5 +225,56 @@ exports.deleteReview = async (req, res) => {
       message: "Ocorreu um erro ao deletar a review.",
       error
     });
+  }
+};
+
+exports.getAllReviewsFromUser = async (req, res) => {
+  try {
+    const userProfile = req.params.userProfile;
+
+    const userIdQuery = await db.query('SELECT userId FROM user_profile WHERE userProfile = $1', [userProfile]);
+
+    if (userIdQuery.rows.length === 0) {
+      return res.status(400).json({
+        message: 'O usuário não foi encontrado'
+      });
+    }
+
+    const userId = userIdQuery.rows[0].userid;
+
+    const { sort } = req.query;
+
+    const sortOptions = {
+      rating_desc: 'r.rating DESC',
+      rating_asc: 'r.rating ASC',
+      latest: 'created_at DESC',
+      oldest: 'created_at ASC',
+      title_desc: 'title ASC',
+      title_asc: 'title DESC'
+    };
+
+    const orderBy = sortOptions[sort] || 'created_at DESC';
+
+    const reviews = await db.query(
+      `SELECT r.id, r.userid, r.gameId, g.title, g.gameId, r.rating, r.review, r.ispublic, r.created_at
+      FROM reviews r
+      JOIN games g ON r.gameId = g.gameid 
+      JOIN users ON r.userId = users.id
+      WHERE r.userid = ${userId} AND r.isPublic
+      GROUP BY r.id, users.username, g.title, g.gameid
+      ORDER BY ${orderBy}
+      `
+    );
+
+    if (reviews.rows.length === 0) {
+      return res.status(400).json({
+        message: 'O usuário não possui reviews'
+      });
+    }
+
+    return res.status(200).json(reviews.rows);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };

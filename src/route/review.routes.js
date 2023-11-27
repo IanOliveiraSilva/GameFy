@@ -8,6 +8,8 @@ router.get('/profile/reviews/', userController.AuthMiddleware, reviewController.
 
 router.get('/game-reviews/:id', userController.AuthMiddleware, reviewController.getAllReviewsFromGames);
 
+router.get('/user/reviews/:userProfile', userController.AuthMiddleware, reviewController.getAllReviewsFromUser);
+
 router.get('/review/:id', userController.AuthMiddleware, reviewController.getReviewById);
 
 router.delete('/review/:id', userController.AuthMiddleware, reviewController.deleteReview);

@@ -185,8 +185,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             buttonsContainer.appendChild(editButton);
             buttonsContainer.insertAdjacentHTML('beforeend', '&emsp;');
             buttonsContainer.appendChild(deleteButton);
-            buttonsContainer.insertAdjacentHTML('beforeend', '&emsp;');
-            buttonsContainer.appendChild(shareButton);
             reviewsContainer.appendChild(buttonsContainer);
         }
 

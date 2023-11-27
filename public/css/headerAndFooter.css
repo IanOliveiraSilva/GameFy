@@ -248,3 +248,43 @@ button {
 .cursor-pointer {
   cursor: pointer;
 }
+
+@media only screen and (max-width: 600px) {
+  body {
+    font-size: 16px; /* Adjust font size for smaller screens */
+  }
+
+  header {
+    height: 80px; /* Adjust header height for smaller screens */
+  }
+
+  nav li,
+  nav a {
+    margin-right: 10px; /* Reduce margin for navigation items on smaller screens */
+  }
+
+  #login-form,
+  #register-form {
+    padding: 15px; /* Adjust padding for forms on smaller screens */
+  }
+
+  #login-form input {
+    margin-bottom: 10px;
+  }
+
+  .profile-image-header {
+    width: 30px;
+    height: 30px;
+    margin-right: 3px;
+    margin-bottom: 8px;
+  }
+
+  .popup {
+    padding: 15px;
+  }
+
+  .logout-options button {
+    padding: 8px 16px;
+    margin: 0 5px;
+  }
+}

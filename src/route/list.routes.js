@@ -8,4 +8,6 @@ router.get('/profile/lists', userController.AuthMiddleware, listController.getAl
 
 router.get('/list/:id', userController.AuthMiddleware, listController.getListById);
 
+router.get('/user/list/:userProfile', userController.AuthMiddleware, listController.getListByUser);
+
 module.exports = router;

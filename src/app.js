@@ -25,7 +25,7 @@ app.use(cors());
 const index = require('./route/index');
 const reviewRoute = require('./route/review.routes');
 const userRoute = require('./route/user.route');
-// const listRoute = require('./route/list.routes');
+const listRoute = require('./route/list.routes');
 // const commentRoute = require('./route/comment.routes');
 const gameRoute = require('./route/game.routes');
 
@@ -33,7 +33,7 @@ const gameRoute = require('./route/game.routes');
 app.use(index);
 app.use('/api/', reviewRoute);
 app.use('/api/', userRoute);
-// app.use('/api/', listRoute);
+app.use('/api/', listRoute);
 // app.use('/api/', commentRoute);
 app.use('/api/', gameRoute);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

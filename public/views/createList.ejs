@@ -1,0 +1,36 @@
+<%- include('partials/header', {pageTitle: 'Critix - Movie Search'}) %>
+
+<link rel="stylesheet" href="../css/createAndUpdate.css">
+
+<main>
+  <div class="container background-container">
+
+    <form class="review-form" id="create-list-form">
+      <h1 class="text-white">Crie a sua lista</h1><br>
+      <label for="name">Nome da Sua Lista de Jogos:</label>
+      <input type="text" id="name" name="name" required placeholder="Minha Lista de Filmes Favoritos"><br><br>
+
+      <label for="description">Adicione uma Descrição para a Lista:</label>
+      <textarea id="description" name="description" rows="4" cols="50" placeholder="Uma lista dos melhores filmes que já assisti"></textarea><br><br>
+
+      <label for="movieTitles">Títulos dos Jogos</label><br>
+      <input type="search" name="search" id="search-input" placeholder="Digite o nome do jogo desejado..."><br>
+      <ul class="results" id="results"></ul>
+
+      <label for="movieTitles">Jogos escolhidos</label>
+      <ul class="selected-movies">
+        <li id="selected-movies"></li>
+      </ul><br>
+
+      <label for="isPublic">Deseja que os outros vejam sua lista?</label><br>
+      <input type="checkbox" id="isPublic" name="isPublic" checked><br><br>
+
+      <button class=" btn-primary" id="create-list-button" type="submit">Criar Lista</button>
+      <a href="/" class="back-link">Voltar para a página inicial</a>
+    </form>
+  </div>
+</main>
+
+<%- include('partials/footer') %>
+
+<script src="../js/createList.js"></script>

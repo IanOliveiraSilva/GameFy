@@ -87,14 +87,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </span>
                     </a>&emsp;
 
-                    <a href="/getAllLists" class="btn btn-primary">
+                    <a href="/profile/lists" class="btn btn-primary">
                     <i class="fas fa-list-ul"></i> 
                     <span class="stat-count">
                     ${profileData.body.profile.contadorlists !== null ? profileData.body.profile.contadorlists : 0}
                     </span>
                     </a>&emsp;
 
-                    <a href="/createList" class="btn btn-primary">
+                    <a href="/create-list" class="btn btn-primary">
                     <span class="stat-count">
                     Criar Lista
                     </span>

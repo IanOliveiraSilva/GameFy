@@ -5,6 +5,7 @@ const routes = [
   { path: '/games', view: 'search-game' },
   { path: '/game/:id', view: 'getGameById' },
   { path: '/create-review/:id', view: 'createReview' },
+  { path: '/create-list/', view: 'createList'},
   { path: '/profile', view: 'profile'},
   { path: '/updateProfile', view: 'updateProfile'},
   { path: '/game-reviews/:id', view: 'getReviewsByGame'},
@@ -12,7 +13,9 @@ const routes = [
   { path: '/profile/reviews/', view: 'getAllReviews'},
   { path: '/search-users/', view: 'search-users'},
   { path: '/reviews/:id', view: 'getUserReview'},
-  { path: '/user/:id', view: 'getUserProfile'}
+  { path: '/user/:id', view: 'getUserProfile'},
+  { path: '/profile/lists/', view: 'getAllLists'},
+  { path: '/list/:id/', view: 'getListById'}
 ];
 
 routes.forEach((route) => {

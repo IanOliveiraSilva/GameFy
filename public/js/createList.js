@@ -46,7 +46,13 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('Um erro aconteceu ao criar a lista');
       }
     });
-  
+
+    function formatYear(dateString) {
+      const date = new Date(dateString);
+      const year = date.getFullYear();
+      return year;
+    }
+    
     input.addEventListener('input', async () => {
         const query = input.value.trim();
         const url = `https://api.rawg.io/api/games?key=${apiKey}&search=${query}`;
@@ -61,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data.results.forEach(game => {
                     const li = document.createElement('li');
                     li.innerHTML = `
-                        ${game.name} (${game.released})
+                        ${game.name} (${formatYear(game.released)})
                     `;
                     li.addEventListener('click', async () => {
                         resultsList.innerHTML = '';

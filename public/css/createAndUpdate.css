@@ -180,12 +180,17 @@ input[type="checkbox"] {
 .results li {
   cursor: pointer;
   background-color: #fff;
-  border: 1px solid #ccc;
+  border: 1px solid #494949;
+  box-shadow: 0 0 10px rgb(233, 5, 241);
   border-radius: 10px;
   padding: 20px;
   margin-bottom: 10px;
   transition: transform 0.2s ease-in-out;
   list-style-type: none;
+}
+
+.results li:hover {
+  transform: scale(1.05);
 }
 
 .selected-movies {
@@ -197,6 +202,7 @@ input[type="checkbox"] {
 .selected-movies li {
   cursor: pointer;
   background-color: #cccbcb;
+  border: 1px solid #000000;
   box-shadow: 0 0 10px rgb(233, 5, 241);
   color: #000000;
   border-radius: 10px;

@@ -258,7 +258,7 @@ router.get('/user/profile', userController.AuthMiddleware, userController.getUse
  */
 router.get('/user/:userprofile', userController.getProfileByUser);
 
-router.get('/profile/searchUsers', userController.AuthMiddleware, userController.searchUsers);
+router.get('/searchUsers/:user', userController.AuthMiddleware, userController.searchUsers);
 
 /**
  * @swagger

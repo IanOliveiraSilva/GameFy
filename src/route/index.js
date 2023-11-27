@@ -9,7 +9,9 @@ const routes = [
   { path: '/updateProfile', view: 'updateProfile'},
   { path: '/game-reviews/:id', view: 'getReviewsByGame'},
   { path: '/review/:id', view: 'getReviewById'},
-  { path: '/profile/reviews/', view: 'getAllReviews'}
+  { path: '/profile/reviews/', view: 'getAllReviews'},
+  { path: '/search-users/', view: 'search-users'},
+  { path: '/user/:id', view: 'getUserProfile'}
 ];
 
 routes.forEach((route) => {

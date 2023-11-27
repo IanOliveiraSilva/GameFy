@@ -189,13 +189,13 @@ hr {
 
 .star {
   font-size: 2em;
-  color: #6e42c1;
+  color: #e70fdc;
+  text-shadow: 0 0 10px #e70fdc;
   border: solid;
   border-radius: 25px;
   width: 150px;
   padding: 5px;
   display: flex;
-  text-shadow: 0 0 10px #e70fdc;
   margin: 10px auto 0;
   margin-top: 25px;
   margin-bottom: 5px;

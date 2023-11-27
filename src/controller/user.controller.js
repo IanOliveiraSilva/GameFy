@@ -259,7 +259,7 @@ exports.getProfileByUser = async (req, res) => {
 
 exports.searchUsers = async (req, res) => {
   try {
-    const searchQuery = req.query.query.toLowerCase().trim();
+    const searchQuery = req.params.user.toLowerCase().trim();
 
     const { rows: users } = await db.query(
       'SELECT * FROM user_profile WHERE LOWER(userProfile) LIKE $1',

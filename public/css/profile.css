@@ -297,3 +297,43 @@ hr {
   box-shadow: 0 0 10px rgb(233, 5, 241);
   color: #ffffff;
 }
+
+/* 
+SEARCH USERS
+*/
+
+form {
+  display: flex;
+  margin-top: 30px;
+  margin-left: 215px;
+  position: relative;
+}
+
+
+input[type="search"] {
+  width: 500px;
+  font-size: 16px;
+  border: 2px solid #4a4a4a;
+  border-radius: 25px;
+  padding: 12px 20px;
+  box-shadow: 0 0 10px rgba(233, 5, 241, 0.5);
+  transition: box-shadow 0.3s ease-in-out;
+  background-color: #f8f8f8;
+}
+
+input[type="search"]:focus {
+  outline: none;
+  box-shadow: 0 0 15px rgba(233, 5, 241, 0.8);
+}
+
+.profile-image-container {
+  margin-right: 20px;
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #000000;
+}

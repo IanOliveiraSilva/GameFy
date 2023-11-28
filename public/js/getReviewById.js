@@ -111,10 +111,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <img class="profile-image-header-review" src="${reviewsData[0].icon}">
                     <div class="user-info">
                       <p class="username">${reviewsData[0].username}</p>
-                      <span class="span-text">${reviewsData[0].review}</span>
+                      
                       <div class="star-rating-container">
                         ${generateStarRating(reviewsData[0].rating).outerHTML}
                       </div>
+                      <span class="span-text">${reviewsData[0].review}</span>
                     </div>
                   </a>
                 `;
@@ -124,10 +125,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <img class="profile-image-header-review" src="https://media.tenor.com/U282vYfv7xAAAAAd/gato-barril.gif">
                     <div class="user-info">
                       <p class="username">${reviewsData[0].username}</p>
-                      <span class="span-text">${reviewsData[0].review}</span>
+                      
                       <div class="star-rating-container">
                         ${generateStarRating(reviewsData[0].rating).outerHTML}
                       </div>
+                      <span class="span-text">${reviewsData[0].review}</span>
                     </div>
                   </a>
                 `;

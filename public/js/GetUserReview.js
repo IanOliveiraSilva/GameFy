@@ -119,8 +119,7 @@ function generateStarRating(rating) {
   
           const ratingRow = document.createElement('tr');
           ratingRow.addEventListener('click', function () {
-            localStorage.setItem('reviewId', review.id);
-            window.location.href = `/getReviewById`;
+            window.location.href = `/review/${review.id}`;
           });
   
           const ratingCell = document.createElement('td');

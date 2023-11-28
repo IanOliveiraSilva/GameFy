@@ -13,9 +13,9 @@ body {
 
 .span-text {
   font-weight: 500;
-  font-size: 17px;
+  font-size: 20px;
   display: block;
-  margin-top: 40px;
+  margin-top: 5px;
   text-align: center;
   text-decoration: none;
   color: #ffffff;
@@ -57,6 +57,7 @@ body {
   text-align: right;
   color: white;
   text-shadow: 0 0 10px #e70fdc;
+  margin-top: 20px;
 }
 
 .action-cell:hover {
@@ -192,8 +193,8 @@ hr {
   font-size: 2em;
   color: #e70fdc;
   text-shadow: 0 0 10px #e70fdc;
-  border: solid;
-  border-radius: 25px;
+  /* border: solid; */
+  /* border-radius: 25px; */
   width: 150px;
   padding: 5px;
   display: flex;

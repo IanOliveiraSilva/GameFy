@@ -17,8 +17,8 @@ body {
 
 .review-form {
   background: linear-gradient(to right, #000000, #3f063c);
-
-  border-radius: 5px;
+  border: 2px solid rgb(0, 0, 0);
+  border-radius: 20px;
   box-shadow: 0 0 10px rgb(233, 5, 241);
   padding: 20px;
   margin-top: 20px;

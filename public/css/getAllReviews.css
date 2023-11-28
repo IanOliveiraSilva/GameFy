@@ -4,11 +4,12 @@ body {
   font-family: 'Nexa', sans-serif;
   font-size: 16px;
   line-height: 1.6;
-  background-image: url('../images/background.jpg');
+  background-image: url('../images/purple-planet-saturn-rings-nebula-galaxy-astronomy-stars-4480x2520-6416.jpg');
   background-size: cover;
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-position: center;
+  backdrop-filter: blur(2.5px);
 }
 
 

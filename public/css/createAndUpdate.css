@@ -8,11 +8,12 @@ body {
   flex-direction: column;
   min-height: 100vh;
   margin: 0;
-  background-image: url('../images/background.jpg');
+  background-image: url('../images/purple-planet-saturn-rings-nebula-galaxy-astronomy-stars-4480x2520-6416.jpg');
   background-size: cover;
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-position: center;
+  backdrop-filter: blur(2.5px);
 }
 
 .review-form {

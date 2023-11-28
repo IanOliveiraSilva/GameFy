@@ -46,9 +46,10 @@ textarea {
   border: 2px solid #6c5ce7;
   border-radius: 8px;
   font-size: 16px;
+  font-weight: 600;
   transition: border-color 0.3s, box-shadow 0.3s;
-  color: #2d3436;
-  background-color: #7a7a7a;
+  color: #ffffff;
+  background-color: #000000;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -57,6 +58,31 @@ input[type="number"]:focus,
 textarea:focus {
   outline: none;
   border-color: rgb(221, 20, 211);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+input[type="search"],
+input[type="number"],
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #e70fdc;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  color: #ffffff;
+  background-color: #000000;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+input[type="search"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+  color: #ffffff;
+  border: 3px solid #bcb3ff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -154,11 +180,11 @@ input[type="checkbox"] {
   border-color: #2d3436;
   color: #ffffff;
   font-weight: bold;
-  padding: 10px 20px;
+  padding: 9px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  border-radius: 5px;
+  border-radius: 25px;
   transition: background-color 0.3s, border-color 0.3s, color 0.3s;
   cursor: pointer;
 }

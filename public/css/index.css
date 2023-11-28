@@ -94,7 +94,7 @@ body {
 .img-poster:hover {
   transform: translateY(-5px);
   border-color: rgb(233, 5, 241);
-  box-shadow: 0 0 10px rgb(233, 5, 241);
+  box-shadow: 2px 2px 10px rgb(233, 5, 241);
 }
 
 #games-tendency .carousel-control-prev, #games-tendency .carousel-control-next {

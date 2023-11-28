@@ -107,32 +107,35 @@ document.addEventListener('DOMContentLoaded', async () => {
             commentCell.classList.add('profile-image-header-review-container')
             if (reviewsData[0].icon != null) {
                 commentCell.innerHTML = `
-                <a href='/profile' class="profile-link">
-                <img class="profile-image-header-review" src="${reviewsData[0].icon}">
-                <div class="user-info">
-                    <p class="username">${reviewsData[0].username}</p>
-                    <span class="span-text">${reviewsData[0].review}</span>
-                </div>
-                </a>
+                  <a href='/profile' class="profile-link">
+                    <img class="profile-image-header-review" src="${reviewsData[0].icon}">
+                    <div class="user-info">
+                      <p class="username">${reviewsData[0].username}</p>
+                      <span class="span-text">${reviewsData[0].review}</span>
+                      <div class="star-rating-container">
+                        ${generateStarRating(reviewsData[0].rating).outerHTML}
+                      </div>
+                    </div>
+                  </a>
                 `;
             } else {
                 commentCell.innerHTML = `
-                <a href='/profile' class="profile-link">
-                <img class="profile-image-header-review" src="https://media.tenor.com/U282vYfv7xAAAAAd/gato-barril.gif">
-                <div class="user-info">
-                    <p class="username">${reviewsData[0].username}</p>
-                    <span class="span-text">${reviewsData[0].review}</span>
-                </div>
-                </a>
+                  <a href='/profile' class="profile-link">
+                    <img class="profile-image-header-review" src="https://media.tenor.com/U282vYfv7xAAAAAd/gato-barril.gif">
+                    <div class="user-info">
+                      <p class="username">${reviewsData[0].username}</p>
+                      <span class="span-text">${reviewsData[0].review}</span>
+                      <div class="star-rating-container">
+                        ${generateStarRating(reviewsData[0].rating).outerHTML}
+                      </div>
+                    </div>
+                  </a>
                 `;
             }
+
             commentCell.classList.add('span-text-border');
             reviewsContainer.appendChild(commentCell);
         }
-
-        reviewsContainer.appendChild(generateStarRating(reviewsData[0].rating));
-        const br = document.createElement('br');
-        reviewsContainer.appendChild(br);
 
         const buttonsContainer = document.createElement('div');
         buttonsContainer.classList.add('text-center');
@@ -200,7 +203,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             comentarioLabel.classList.add('comment-label')
             const comentarioInput = document.createElement('input');
             comentarioInput.classList.add('comment-input');
-            comentarioInput.placeholder = 'Adorei a sua review!';
+            comentarioInput.placeholder = 'Escreva aqui seu comentario...';
             comentarioInput.type = 'text';
             comentarioInput.name = 'comment';
             comentarioLabel.appendChild(comentarioInput);

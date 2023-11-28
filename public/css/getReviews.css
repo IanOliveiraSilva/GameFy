@@ -16,14 +16,14 @@ body {
   width: 100%;
   margin-bottom: 20px;
   border-collapse: collapse;
-  background-color: #000000;
+  background: linear-gradient(to left, #000000, #3f063c);
   box-shadow: 0 0 10px rgba(233, 5, 241, 0.5);
 }
 
 .reviews{
 
   margin-top: 50px;
-  background-color: #000;
+  background: linear-gradient(to right, #000000, #3f063c);
 }
 
 .table td, .table th {
@@ -54,7 +54,7 @@ body {
 
 
 .table tr:hover {
-  background-color: #949494;
+  background-color: #000000;
 }
 
 

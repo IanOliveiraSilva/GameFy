@@ -205,10 +205,12 @@ hr {
 .comment-section {
   max-width: 600px;
   margin: 0 auto;
-  padding: 40px;
-  background-color: #ffffff;
+  padding: 10px;
+  background-color: #000000;
   border-radius: 20px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  margin-top: 50px;
+  border: 1px solid rgb(225, 84, 230);
+  box-shadow: 5px 5px 10px rgb(158, 4, 163);
 }
 
 .comment-label {
@@ -221,7 +223,7 @@ hr {
 
 .comment-input {
   width: calc(100% - 24px);
-  padding: 16px;
+  padding: 10px;
   font-size: 18px;
   border: 2px solid #000000;
   border-radius: 10px;
@@ -236,21 +238,19 @@ hr {
 }
 
 .comment-button {
-  background-color: #000000;
-  color: white;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
   border: none;
-  padding: 16px 28px;
+  padding: 12px;
   border-radius: 30px;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 15px;
   transition: background-color 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .comment-button:hover {
-  background-color: #ffe600;
+  background-color: #7a7a7a;
   color: black;
 }
 

@@ -60,7 +60,8 @@ body {
 }
 
 .login-form {
-  background-color: rgb(0, 0, 0);
+  background: linear-gradient(to right, #000000, #3f063c);
+
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
@@ -93,4 +94,81 @@ body {
   background-color: #ffffff;
   color: #000000;
   border-color: #000000;
+}
+
+
+input[type="text"],
+input[type="number"],
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #6c5ce7;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  color: #ffffff;
+  background-color: #000000;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus {
+  outline: none;
+  border-color: #d3008d;
+  color: #ffffff;
+  background-color: #000000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+input[type="date"] {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #6c5ce7;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  color: #ffffff;
+  background-color: #000000;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+input[type="date"]:focus {
+  outline: none;
+  border-color: #d3008d;
+  color: #ffffff;
+  background-color: #000000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles for select input */
+select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #6c5ce7;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  color: #ffffff;
+  background-color: #000000;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+select:focus {
+  outline: none;
+  border-color: #d3008d;
+  color: #ffffff;
+  background-color: #000000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+input[type="checkbox"] {
+  margin-left: 5px;
 }

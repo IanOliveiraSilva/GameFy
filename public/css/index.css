@@ -32,9 +32,9 @@ body {
   font-size: 24px;
   font-weight: 800;
   margin-bottom: 20px;
-  color: #8a63a9;
+  color: #ffffff;
   white-space: nowrap;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 2px 2px 4px #8a63a9;
   letter-spacing: 1px;
 }
 
@@ -57,24 +57,20 @@ body {
   align-items: center;
   padding: 20px;
   position: relative;
-  background-color: #000000;
+  background: linear-gradient(to right, #000000, #3f063c);
   border: 2px solid #000000;
   border-radius: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-.index-container:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 10px rgb(233, 5, 241);
-}
 
 .index-container-tendency {
   display: flex;
   align-items: center;
   padding: 20px;
   position: relative;
-  background-color: #000000;
+  background: linear-gradient(to right, #000000, #3f063c);
   border: 2px solid #000000;
   border-radius: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);

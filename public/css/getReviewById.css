@@ -75,7 +75,7 @@ a:hover {
 
 .reviews{
   padding: 20px;
-  background-color: #000000;
+  background: linear-gradient(to right, #000000, #3f063c);
   border: 2px solid;
   border-radius: 20px;
   box-shadow: 0 0 10px rgb(233, 5, 241);
@@ -87,7 +87,7 @@ a:hover {
   width: 100%;
   margin-bottom: 20px;
   border-collapse: collapse;
-  background-color: #000000;
+ background: linear-gradient(to right, #000000, #3f063c);
   box-shadow: 0 0 10px rgba(233, 5, 241, 0.5);
 }
 

@@ -1,23 +1,27 @@
-require('dotenv').config();
+require("dotenv").config();
 
 const db = require("../config/db");
 
-exports.createComment = async (req, res) => {
+exports.createComment = async (req, res, next) => {
   const { reviewId, comment } = req.body;
   const userId = req.user.id;
 
   try {
-    const { rows: [existingReview] } = await db.query('SELECT * FROM reviews WHERE id = $1', [reviewId]);
+    const {
+      rows: [existingReview],
+    } = await db.query("SELECT * FROM reviews WHERE id = $1", [reviewId]);
 
     if (!existingReview || !existingReview.id) {
-      return res.status(400).json({ message: 'Review não encontrada!' });
+      throw new Error("Review não encontrada!");
     }
 
     if (existingReview.userid === userId) {
-      return res.status(400).json({ message: 'Você não pode comentar na sua própria review!' });
+      throw new Error("Você não pode comentar na sua própria review!");
     }
 
-    const { rows: [newComment] } = await db.query(
+    const {
+      rows: [newComment],
+    } = await db.query(
       `INSERT INTO comments (reviewId, userId, comment)
         VALUES ($1, $2, $3)
         RETURNING *`,
@@ -25,21 +29,18 @@ exports.createComment = async (req, res) => {
     );
 
     res.status(201).json({
-      message: 'Comentário criado com sucesso!',
+      message: "Comentário criado com sucesso!",
       body: {
-        comment: newComment
-      }
+        comment: newComment,
+      },
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      message: 'Um erro aconteceu enquanto o comentário era criado',
-      error
-    });
+    next(error);
   }
 };
 
-exports.getAllCommentsFromUser = async (req, res) => {
+exports.getAllCommentsFromUser = async (req, res, next) => {
   try {
     const userId = req.params.id;
 
@@ -52,22 +53,20 @@ exports.getAllCommentsFromUser = async (req, res) => {
       [userId]
     );
 
-    if (comments.rows.length === 0) {
-      return res.status(400).json({
-        message: 'O usuário não possui comentários'
-      });
+    if (!comments.rows.length) {
+      throw new Error("O usuário não possui comentários");
     }
 
     return res.status(200).json(comments.rows);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };
 
-exports.getReviewComments = async (req, res) => {
+exports.getReviewComments = async (req, res, next) => {
   try {
-    const  id  = req.params.id;
+    const id = req.params.id;
 
     const { rows: comments } = await db.query(
       `SELECT c.id, c.userId, u.username, c.comment, c.createdAt, c.reviewid, COUNT(*)
@@ -77,21 +76,21 @@ exports.getReviewComments = async (req, res) => {
       GROUP BY c.id, u.username`,
       [id]
     );
-    if (!comments || comments.length === 0) {
-      return res.status(404).json({
-        message: 'A review não possui comentários'
-      });
+
+    if (!comments || !comments.length) {
+      throw new Error("A review não possui comentários");
     }
+
     return res.status(200).json(comments);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };
 
-exports.deleteComment = async (req, res) => {
+exports.deleteComment = async (req, res, next) => {
   try {
-    const  id  = req.params.id;
+    const id = req.params.id;
     const userId = req.user.id;
 
     const { rows } = await db.query(
@@ -101,60 +100,47 @@ exports.deleteComment = async (req, res) => {
       [userId, id]
     );
 
-    if (rows.length === 0) {
-      return res.status(404).json({
-        message: "O comentário que você tentou deletar não existe."
-      });
+    if (!rows.length) {
+      throw new Error("O comentário quer você tentou deletar não exists.");
     }
 
     return res.status(200).json({
       message: "Comentário deletado com sucesso!",
-      comment: rows[0]
+      comment: rows[0],
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
-      message: "Ocorreu um erro ao deletar o comentário.",
-      error
-    });
+    next(error);
   }
 };
 
-exports.updateComment = async (req, res) => {
+exports.updateComment = async (req, res, next) => {
   const { id } = req.query;
   const userId = req.user.id;
   const { comment } = req.body;
 
   try {
     if (!comment) {
-      return res.status(400).json({
-        message: 'Comentário é obrigatório'
-      });
+      throw new Error("Comentário é obrigatório");
     }
 
     const { rows } = await db.query(
-      'UPDATE comments SET comment = $1 WHERE id = $2 AND userId = $3 RETURNING *',
+      "UPDATE comments SET comment = $1 WHERE id = $2 AND userId = $3 RETURNING *",
       [comment, id, userId]
     );
 
-    if (rows.length === 0) {
-      return res.status(404).json({
-        message: "Não foi possível encontrar o comentário com o id fornecido."
-      });
+    if (!rows.length) {
+      throw new Error(
+        "Não foi possível encontrar o comentário com o ID fornecido."
+      );
     }
 
     return res.status(200).json({
       message: "Comentário atualizado com sucesso!",
-      comment: rows[0]
+      comment: rows[0],
     });
-
   } catch (error) {
     console.error(error);
-    return res.status(500).json({
-      message: "Ocorreu um erro ao atualizar o comentário.",
-      error
-    });
+    next(error);
   }
 };
-
-

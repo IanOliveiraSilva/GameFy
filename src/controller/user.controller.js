@@ -1,125 +1,64 @@
-require('dotenv').config();
+require("dotenv").config();
 
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const db = require("../config/db");
+const { UserService } = require("../services/user.service");
 
 function formatarDataParaString(data) {
-  const dia = String(data.getDate()).padStart(2, '0');
-  const mes = String(data.getMonth() + 1).padStart(2, '0');
+  const dia = String(data.getDate()).padStart(2, "0");
+  const mes = String(data.getMonth() + 1).padStart(2, "0");
   const ano = data.getFullYear();
 
   return `${dia}/${mes}/${ano}`;
 }
 
-exports.signup = async (req, res) => {
+const userService = new UserService();
+
+exports.signup = async (req, res, next) => {
   try {
-    //Requisição do body
     const { username, email, password } = req.body;
 
-    // Validação dos campos de entrada
-    if (!email || !username || !password) {
-      return res.status(400).json({ message: 'All fields are required' });
-    }
-
-    // Validação para saber se o email já está em uso
-    const emailExists = await db.query('SELECT * FROM users WHERE email = $1', [email]);
-    if (emailExists.rows.length > 0) {
-      return res.status(400).json({ message: 'Email already taken' });
-    }
-
-    // Validação para saber se o usaurio já está em uso
-    const userExists = await db.query('SELECT * FROM users WHERE username = $1', [username]);
-    if (userExists.rows.length > 0) {
-      return res.status(400).json({ message: 'User already taken' });
-    }
-
-    // Hash da senha antes de salvar no banco de dados
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Cria novo usuario no banco de dados
-    const newUser = await db.query(
-      'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id, username, email',
-      [username, email, hashedPassword]
-    );
-
-    // Gera um token de autenticação
-    const token = jwt.sign(
-      { id: newUser.rows[0].id, username: newUser.rows[0].username },
-      process.env.JWT_SECRET,
-      { expiresIn: '10d' }
-    );
-
-    // Retorna o novo usuario criado
-    return res.status(201).json({ user: newUser.rows[0], token });
+    const response = await userService.signUp({ username, email, password });
+    return res.status(201).json(response);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };
 
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
   try {
-    // Requisição do body
     const { email_or_username, password } = req.body;
 
-    // Validação dos campos de entrada
-    if (!email_or_username || !password) {
-      return res.status(400).json({ message: 'Email or username and password are required' });
-    }
-
-    // Consulta o usuário no banco de dados pelo email ou nome de usuário
-    const user = await db.query('SELECT u.id, u.username, u.email, u.password, u.created_at, up.icon FROM users u JOIN user_profile up ON up.userid = u.id WHERE username  = $1 OR email  = $1',
-      [email_or_username]);
-    if (user.rows.length === 0) {
-      return res.status(400).json({ message: 'Invalid email or username or password' });
-    }
-
-    // Verifica se a senha fornecida corresponde à senha no banco de dados
-    const isPasswordCorrect = await bcrypt.compare(password, user.rows[0].password);
-    if (!isPasswordCorrect) {
-      return res.status(400).json({ message: 'Invalid email or username or password' });
-    }
-
-
-    // Gera um token de autenticação
-    const token = jwt.sign(
-      { id: user.rows[0].id, username: user.rows[0].username },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    return res.status(200).json({ user: user.rows[0], token });
+    const response = await userService.login({ email_or_username, password });
+    return res.status(200).json(response);
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
 };
 
-exports.changePassword = async (req, res) => {
+exports.changePassword = async (req, res, next) => {
   try {
-    const { newPassword } = req.body;
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
     const userId = req.user.id;
+    const { newPassword } = req.body;
 
-    const user = await db.query(
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await db.query(
       `
       UPDATE users
       SET password = $1 
       WHERE id = $2
       `,
-      [
-        hashedPassword,
-        userId
-      ]
-    )
-    return res.status(201).json({ user: 'Senha alterada com sucesso!'});
+      [hashedPassword, userId]
+    );
+    return res.status(201).json({ user: "Senha alterada com sucesso!" });
   } catch (error) {
-    return res.status(500).json({ message: 'Internal server error' });
+    next(error);
   }
-}
+};
 
-exports.createUserProfile = async (req, res) => {
+exports.createUserProfile = async (req, res, next) => {
   try {
     // Requisição do body e do usuario autenticado
     const {
@@ -132,12 +71,14 @@ exports.createUserProfile = async (req, res) => {
       socialMediaX,
       socialMediaTikTok,
       userProfileTag,
-      icon
+      icon,
     } = req.body;
 
     const userId = req.user.id;
 
-    const { rows: [userProfile] } = await db.query(
+    const {
+      rows: [userProfile],
+    } = await db.query(
       `INSERT INTO user_profile(name, familyName, bio, userId, location, birthday, socialmediaInstagram, socialMediaX, socialMediaTikTok, userProfile, icon) 
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
         RETURNING *`,
@@ -152,30 +93,28 @@ exports.createUserProfile = async (req, res) => {
         socialMediaX,
         socialMediaTikTok,
         userProfileTag,
-        icon
+        icon,
       ]
     );
     res.status(201).json({
-      message: 'Perfil criado com sucesso',
+      message: "Perfil criado com sucesso",
       body: {
-        profile: userProfile
-      }
+        profile: userProfile,
+      },
     });
   } catch (error) {
-    console.log(error);
-    res.status(400).json({
-      message: 'Um erro aconteceu enquanto o perfil de usuario era criado',
-      error
-    });
+    next(error);
   }
 };
 
-exports.getUserProfile = async (req, res) => {
+exports.getUserProfile = async (req, res, next) => {
   try {
     // Requisição do usuario autenticado
     const userId = req.user.id;
 
-    let { rows: [userProfile] } = await db.query(
+    let {
+      rows: [userProfile],
+    } = await db.query(
       `SELECT u.id, u.userid, u.name as givenName, u.familyname, u.location, u.bio, u.birthday, u.socialmediainstagram, u.socialmediax, u.socialmediatiktok, u.userprofile, u.icon,
       (SELECT COUNT(*) FROM reviews WHERE userId = $1) AS contadorreviews, 
       (SELECT COUNT(*) FROM lists WHERE userId = $1) AS contadorlists 
@@ -185,50 +124,51 @@ exports.getUserProfile = async (req, res) => {
       [userId]
     );
 
-    if(userProfile == undefined){
+    if (userProfile == undefined) {
       userProfile = {
-        "haveProfile": false
+        haveProfile: false,
       };
     }
 
     // Formata a data de nascimento para o formato 'DD/MM/AAAA'
     if (userProfile && userProfile.birthday) {
-      const dataFormatada = formatarDataParaString(new Date(userProfile.birthday));
+      const dataFormatada = formatarDataParaString(
+        new Date(userProfile.birthday)
+      );
       userProfile.birthday = dataFormatada;
     }
 
     res.status(200).json({
-      message: 'Perfil encontrado com sucesso!',
+      message: "Perfil encontrado com sucesso!",
       body: {
-        profile: userProfile
+        profile: userProfile,
       },
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message: 'Um erro aconteceu enquanto o perfil era buscado',
-      error,
-    });
+    next(error);
   }
 };
 
-exports.getProfileByUser = async (req, res) => {
+exports.getProfileByUser = async (req, res, next) => {
   try {
     const userProfileParam = req.params.userprofile;
 
     // Consulta o userId baseado no userProfile
-    const userIdQuery = await db.query('SELECT * FROM user_profile WHERE LOWER(userProfile) = LOWER($1)', [userProfileParam]);
+    const userIdQuery = await db.query(
+      "SELECT * FROM user_profile WHERE LOWER(userProfile) = LOWER($1)",
+      [userProfileParam]
+    );
 
-    if (userIdQuery.rows.length === 0) {
-      return res.status(400).json({
-        message: 'O usuário não foi encontrado'
-      });
+    if (!userIdQuery.rows.length) {
+      throw new Error("O usuário não foi encontrado");
     }
 
     const userId = userIdQuery.rows[0].userid;
 
     // Consulta o perfil do usuário
-    const { rows: [userProfile] } = await db.query(
+    const {
+      rows: [userProfile],
+    } = await db.query(
       `SELECT u.id, u.userid, u.name as givenName, u.familyname, u.bio, u.location, u.birthday, u.socialmediainstagram, u.socialmediax, u.socialmediatiktok, u.userprofile, 
       u.icon, 
       (SELECT COUNT(*) FROM reviews WHERE userId = $1) AS contadorreviews, 
@@ -240,66 +180,60 @@ exports.getProfileByUser = async (req, res) => {
 
     // Formata a data de nascimento para o formato 'DD/MM/AAAA'
     if (userProfile && userProfile.birthday) {
-      const dataFormatada = formatarDataParaString(new Date(userProfile.birthday));
+      const dataFormatada = formatarDataParaString(
+        new Date(userProfile.birthday)
+      );
       userProfile.birthday = dataFormatada;
     }
 
     res.status(200).json({
-      message: 'Perfil encontrado com sucesso!',
+      message: "Perfil encontrado com sucesso!",
       body: {
-        profile: userProfile
+        profile: userProfile,
       },
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message: 'Um erro aconteceu enquanto o perfil era buscado',
-      error,
-    });
+    next(error);
   }
 };
 
-exports.searchUsers = async (req, res) => {
+exports.searchUsers = async (req, res, next) => {
   try {
     const searchQuery = req.params.user.toLowerCase().trim();
 
     const { rows: users } = await db.query(
-      'SELECT * FROM user_profile WHERE LOWER(userProfile) LIKE $1',
+      "SELECT * FROM user_profile WHERE LOWER(userProfile) LIKE $1",
       [`%${searchQuery}%`]
     );
 
-    if (users.length === 0) {
-      return res.status(400).json({
-        message: 'Nenhum usuário encontrado com a consulta fornecida',
-      });
+    if (!users.length) {
+      throw new Error("Nenhum usuário encontrado com a consulta fornecida");
     }
 
-    const profiles = users.map(user => {
+    const profiles = users.map((user) => {
       return {
         userId: user.userid,
         givenName: user.name,
         familyName: user.familyname,
         userProfile: user.userprofile,
-        icon: user.icon || 'https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.webp',
+        icon:
+          user.icon ||
+          "https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.webp",
       };
     });
 
     res.status(200).json({
-      message: 'Usuários encontrados com sucesso!',
+      message: "Usuários encontrados com sucesso!",
       body: {
         users: profiles,
       },
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message: 'Um erro aconteceu durante a busca de usuários',
-      error,
-    });
+    next(error);
   }
 };
 
-exports.updateUserProfile = async (req, res) => {
+exports.updateUserProfile = async (req, res, next) => {
   try {
     // Requisição do body e do usuario autenticado
     const {
@@ -310,12 +244,14 @@ exports.updateUserProfile = async (req, res) => {
       birthday,
       socialmediaInstagram,
       socialMediaX,
-      socialMediaTikTok
+      socialMediaTikTok,
     } = req.body;
     const userId = req.user.id;
 
     // Atualiza o perfil do usuário no banco de dados
-    const { rows: [newProfile] } = await db.query(
+    const {
+      rows: [newProfile],
+    } = await db.query(
       `UPDATE user_profile
        SET name = $1,
         familyName = $2,
@@ -336,24 +272,20 @@ exports.updateUserProfile = async (req, res) => {
         socialmediaInstagram,
         socialMediaX,
         socialMediaTikTok,
-        userId]
+        userId,
+      ]
     );
 
     return res.status(200).json({
       message: "Perfil atualizado com sucesso",
-      profile: newProfile
+      profile: newProfile,
     });
-
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      message: "Ocorreu um erro ao atualizar a review.",
-      error
-    });
+    next(error);
   }
 };
 
-exports.updateUserProfilePartially = async (req, res) => {
+exports.updateUserProfilePartially = async (req, res, next) => {
   try {
     //Requisição do body e do usuario autenticado
     const {
@@ -365,7 +297,7 @@ exports.updateUserProfilePartially = async (req, res) => {
       socialmediaInstagram,
       socialMediaX,
       socialMediaTikTok,
-      icon
+      icon,
     } = req.body;
     const userId = req.user.id;
 
@@ -382,14 +314,18 @@ exports.updateUserProfilePartially = async (req, res) => {
       bio: bio || existingProfile.rows[0].bio,
       location: location || existingProfile.rows[0].location,
       birthday: birthday || existingProfile.rows[0].birthday,
-      socialmediaInstagram: socialmediaInstagram || existingProfile.rows[0].socialmediaInstagram,
+      socialmediaInstagram:
+        socialmediaInstagram || existingProfile.rows[0].socialmediaInstagram,
       socialMediaX: socialMediaX || existingProfile.rows[0].socialMediax,
-      socialMediaTikTok: socialMediaTikTok || existingProfile.rows[0].socialMediatiktok,
-      icon: icon || existingProfile.rows[0].icon
+      socialMediaTikTok:
+        socialMediaTikTok || existingProfile.rows[0].socialMediatiktok,
+      icon: icon || existingProfile.rows[0].icon,
     };
 
     // Atualiza o perfil no banco de dados
-    const { rows: [newProfile] } = await db.query(
+    const {
+      rows: [newProfile],
+    } = await db.query(
       `UPDATE user_profile 
        SET name = $1, 
         familyName = $2, 
@@ -412,40 +348,39 @@ exports.updateUserProfilePartially = async (req, res) => {
         updatedProfile.socialMediaX,
         updatedProfile.socialMediaTikTok,
         icon,
-        userId
+        userId,
       ]
     );
     return res.status(200).json({
       message: "Perfil atualizado com sucesso!",
-      profile: newProfile
+      profile: newProfile,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      message: "Ocorreu um erro ao atualizar o perfil.",
-      error,
-    });
+    next(error);
   }
 };
 
 exports.AuthMiddleware = async (req, res, next) => {
   try {
-
     // Verifica se o token está no header
-    const token = req.headers.authorization.split(' ')[1];
+    const token = req.headers.authorization.split(" ")[1];
 
     if (!token) {
-      return res.status(401).json({ message: 'Token de autorização não fornecido' });
+      return res
+        .status(401)
+        .json({ message: "Token de autorização não fornecido" });
     }
 
     // Verifica se o token é válido
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
 
     // Consulta o usuário no banco de dados com base no ID do token decodificado
-    const user = await db.query('SELECT * FROM users WHERE id = $1', [decodedToken.id]);
+    const user = await db.query("SELECT * FROM users WHERE id = $1", [
+      decodedToken.id,
+    ]);
 
     if (!user) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({ message: "Unauthorized" });
     }
 
     // Define o objeto do usuário na requisição para uso nas rotas protegidas
@@ -455,7 +390,7 @@ exports.AuthMiddleware = async (req, res, next) => {
     next();
   } catch (error) {
     console.error(error);
-    return res.status(401).json({ message: 'Invalid token' });
+    return res.status(401).json({ message: "Invalid token" });
   }
 };
 
@@ -478,23 +413,21 @@ exports.GetRatingCount = async (req, res, next) => {
     const ratings = ratingCount.rows;
 
     res.status(200).json({
-      rating: ratings
+      rating: ratings,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message: 'Um erro aconteceu enquanto o perfil era buscado',
-      error,
-    });
+    next(error);
   }
-}
+};
 
 exports.GetRatingCountByUser = async (req, res, next) => {
   try {
-
     const userProfile = req.query.userProfile;
 
-    const userIdQuery = await db.query('SELECT * FROM user_profile WHERE userProfile = $1', [userProfile]);
+    const userIdQuery = await db.query(
+      "SELECT * FROM user_profile WHERE userProfile = $1",
+      [userProfile]
+    );
 
     const userId = userIdQuery.rows[0].userid;
 
@@ -513,65 +446,9 @@ exports.GetRatingCountByUser = async (req, res, next) => {
     const ratings = ratingCount.rows;
 
     res.status(200).json({
-      rating: ratings
+      rating: ratings,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message: 'Um erro aconteceu enquanto o perfil era buscado',
-      error,
-    });
+    next(error);
   }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+};

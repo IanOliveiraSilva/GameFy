@@ -1,5 +1,5 @@
-const router = require('express-promise-router')();
-const userController = require('../controller/user.controller');
+const router = require("express-promise-router")();
+const userController = require("../controller/user.controller");
 
 /**
  * @swagger
@@ -47,7 +47,7 @@ const userController = require('../controller/user.controller');
  *       '500':
  *         description: Erro interno do servidor.
  */
-router.post('/user/signup', userController.signup);
+router.post("/user/signup", userController.signup);
 
 /**
  * @swagger
@@ -94,9 +94,13 @@ router.post('/user/signup', userController.signup);
  *       '500':
  *         description: Erro interno do servidor.
  */
-router.post('/user/login', userController.login);
+router.post("/user/login", userController.login);
 
-router.post('/user/changePassword', userController.AuthMiddleware, userController.changePassword);
+router.post(
+  "/user/changePassword",
+  userController.AuthMiddleware,
+  userController.changePassword
+);
 
 /**
  * @swagger
@@ -135,7 +139,11 @@ router.post('/user/changePassword', userController.AuthMiddleware, userControlle
  *       '500':
  *         description: Erro interno do servidor.
  */
-router.post('/user/profile', userController.AuthMiddleware, userController.createUserProfile);
+router.post(
+  "/user/profile",
+  userController.AuthMiddleware,
+  userController.createUserProfile
+);
 
 /**
  * @swagger
@@ -191,7 +199,11 @@ router.post('/user/profile', userController.AuthMiddleware, userController.creat
  *         scheme: bearer
  *         bearerFormat: JWT
  */
-router.get('/user/profile', userController.AuthMiddleware, userController.getUserProfile);
+router.get(
+  "/user/profile",
+  userController.AuthMiddleware,
+  userController.getUserProfile
+);
 
 /**
  * @swagger
@@ -256,9 +268,13 @@ router.get('/user/profile', userController.AuthMiddleware, userController.getUse
  *         scheme: bearer
  *         bearerFormat: JWT
  */
-router.get('/user/:userprofile', userController.getProfileByUser);
+router.get("/user/:userprofile", userController.getProfileByUser);
 
-router.get('/searchUsers/:user', userController.AuthMiddleware, userController.searchUsers);
+router.get(
+  "/searchUsers/:user",
+  userController.AuthMiddleware,
+  userController.searchUsers
+);
 
 /**
  * @swagger
@@ -318,7 +334,11 @@ router.get('/searchUsers/:user', userController.AuthMiddleware, userController.s
  *         scheme: bearer
  *         bearerFormat: JWT
  */
-router.put('/user/profile', userController.AuthMiddleware, userController.updateUserProfile);
+router.put(
+  "/user/profile",
+  userController.AuthMiddleware,
+  userController.updateUserProfile
+);
 
 /**
  * @swagger
@@ -378,7 +398,11 @@ router.put('/user/profile', userController.AuthMiddleware, userController.update
  *         scheme: bearer
  *         bearerFormat: JWT
  */
-router.patch('/user/profile', userController.AuthMiddleware, userController.updateUserProfilePartially);
+router.patch(
+  "/user/profile",
+  userController.AuthMiddleware,
+  userController.updateUserProfilePartially
+);
 
 /**
  * @swagger
@@ -418,10 +442,16 @@ router.patch('/user/profile', userController.AuthMiddleware, userController.upda
  *         scheme: bearer
  *         bearerFormat: JWT
  */
-router.get('/user/rating', userController.AuthMiddleware, userController.GetRatingCount);
+router.get(
+  "/user/rating",
+  userController.AuthMiddleware,
+  userController.GetRatingCount
+);
 
-router.get('/rating/id', userController.AuthMiddleware, userController.GetRatingCountByUser);
-
-
+router.get(
+  "/rating/id",
+  userController.AuthMiddleware,
+  userController.GetRatingCountByUser
+);
 
 module.exports = router;

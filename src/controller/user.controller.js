@@ -69,18 +69,17 @@ exports.login = async (req, res) => {
     }
 
     // Consulta o usuário no banco de dados pelo email ou nome de usuário
-    const user = await db.query('SELECT u.id, u.username, u.email, u.password, u.created_at, up.icon FROM users u JOIN user_profile up ON up.userid = u.id WHERE username  = $1 OR email  = $1',
+    const user = await db.query('SELECT u.id, u.username, u.email, u.password, u.created_at, up.icon FROM users u LEFT JOIN user_profile up ON up.userid = u.id WHERE username  = $1 OR email  = $1',
       [email_or_username]);
     if (user.rows.length === 0) {
-      return res.status(400).json({ message: 'Invalid email or username or password' });
+      return res.status(400).json({ message: 'Invalid email or username' });
     }
 
     // Verifica se a senha fornecida corresponde à senha no banco de dados
     const isPasswordCorrect = await bcrypt.compare(password, user.rows[0].password);
     if (!isPasswordCorrect) {
-      return res.status(400).json({ message: 'Invalid email or username or password' });
+      return res.status(400).json({ message: 'Invalid password' });
     }
-
 
     // Gera um token de autenticação
     const token = jwt.sign(
@@ -89,6 +88,7 @@ exports.login = async (req, res) => {
       { expiresIn: '7d' }
     );
 
+    // Retorna o usuario e o token
     return res.status(200).json({ user: user.rows[0], token });
   } catch (error) {
     console.error(error);

@@ -94,22 +94,22 @@ function generateStarRating(rating) {
         const thead = document.createElement('thead');
         const headerRow = document.createElement('tr');
   
-        const titleLabel = document.createElement('th');
-        titleLabel.textContent = 'Filme';
-        headerRow.appendChild(titleLabel);
+        // const titleLabel = document.createElement('th');
+        // titleLabel.textContent = 'Filme';
+        // headerRow.appendChild(titleLabel);
   
-        const dateLabel = document.createElement('th');
-        dateLabel.textContent = 'Data';
-        headerRow.appendChild(dateLabel);
+        // const dateLabel = document.createElement('th');
+        // dateLabel.textContent = 'Data';
+        // headerRow.appendChild(dateLabel);
   
   
-        const ratingLabel = document.createElement('th');
-        ratingLabel.textContent = 'Nota';
-        headerRow.appendChild(ratingLabel);
+        // const ratingLabel = document.createElement('th');
+        // ratingLabel.textContent = 'Nota';
+        // headerRow.appendChild(ratingLabel);
   
-        const actionsLabel = document.createElement('th');
-        actionsLabel.textContent = 'Ações';
-        headerRow.appendChild(actionsLabel);
+        // const actionsLabel = document.createElement('th');
+        // actionsLabel.textContent = 'Ações';
+        // headerRow.appendChild(actionsLabel);
   
         thead.appendChild(headerRow);
         table.appendChild(thead);
@@ -156,7 +156,7 @@ function generateStarRating(rating) {
           ratingRow.appendChild(dateCell);
           ratingRow.appendChild(ratingCell);
           ratingRow.appendChild(actionsCell);
-  
+          
           tbody.appendChild(ratingRow);
   
           table.appendChild(tbody);

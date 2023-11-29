@@ -75,7 +75,7 @@ a:hover {
   color: #9866f3;
 }
 
-.reviews{
+.reviews {
   padding: 20px;
   background: linear-gradient(to right, #000000, #3f063c);
   border: 2px solid;
@@ -85,15 +85,20 @@ a:hover {
   margin-bottom: 50px;
 }
 
-.table {
+table {
   width: 100%;
   margin-bottom: 20px;
   border-collapse: collapse;
- background: linear-gradient(to right, #000000, #3f063c);
+  background: linear-gradient(to right, #000000, #3f063c);
   box-shadow: 0 0 10px rgba(233, 5, 241, 0.5);
 }
 
-.table td, .table th {
+table:hover {
+  background-color: #000000;
+}
+
+table td,
+table th {
   padding: 30px;
   font-size: 15px;
   font-weight: 600;
@@ -103,31 +108,26 @@ a:hover {
   white-space: nowrap;
 }
 
-.table th {
+table th {
   background-color: #ffffff;
   color: #000000;
   font-weight: bold;
   font-size: 17px;
 }
 
-.table td.title-cell {
+table td.title-cell {
   font-weight: bold;
 }
 
-.table td.rating-cell {
+table td.rating-cell {
   font-size: 16px;
 }
 
-.table td.edit-cell {
+table td.edit-cell {
   text-align: center;
 }
 
-.table tr:hover {
-  background-color: #949494;
-}
-
-
-#poster-centralize{
+#poster-centralize {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -156,7 +156,7 @@ a:hover {
 }
 
 
-.title{
+.title {
   display: block;
   margin-top: 10px;
   font-weight: 600px;
@@ -182,7 +182,7 @@ a:hover {
   text-transform: uppercase;
 }
 
-hr {  
+hr {
   height: 2px;
   background-color: #ffffff;
   margin: 20px 0;
@@ -205,54 +205,60 @@ hr {
 }
 
 .comment-section {
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 400px;
   padding: 10px;
   background-color: #000000;
   border-radius: 20px;
-  margin-top: 50px;
+  margin-top: 75px;
   border: 1px solid rgb(225, 84, 230);
   box-shadow: 5px 5px 10px rgb(158, 4, 163);
+  margin-right: auto;
+  margin-left: 10px;
 }
 
 .comment-label {
   font-weight: bold;
   margin-bottom: 20px;
   display: block;
-  color: #333;
-  font-size: 24px;
+  color: #ffffff;
+  font-size: 20px;
 }
 
 .comment-input {
-  width: calc(100% - 24px);
-  padding: 10px;
-  font-size: 18px;
-  border: 2px solid #000000;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  color: #333;
-  background-color: #f9f9f9;
-  transition: border-color 0.3s ease;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #6c5ce7;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  color: #ffffff;
+  background-color: #000000;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .comment-input:focus {
-  border-color: #ff9100;
+  outline: none;
+  color: #ffffff;
+  border-color: rgb(221, 20, 211);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .comment-button {
   background-color: #ffffff;
   color: rgb(0, 0, 0);
   border: none;
-  padding: 12px;
+  padding: 10px;
   border-radius: 30px;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 16px;
   transition: background-color 0.3s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .comment-button:hover {
-  background-color: #7a7a7a;
+  background-color: rgb(221, 20, 211);
   color: black;
 }
 
@@ -265,4 +271,12 @@ hr {
   margin-bottom: 20px;
 }
 
+.button-container {
+  margin-top: 50px;
+  margin-right: 75px;
 
+}
+
+i:hover{
+  transform: scale(1.20);
+}

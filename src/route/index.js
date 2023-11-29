@@ -13,6 +13,7 @@ const routes = [
   { path: '/profile/reviews/', view: 'getAllReviews'},
   { path: '/search-users/', view: 'search-users'},
   { path: '/reviews/:id', view: 'getUserReview'},
+  { path: '/lists/:id', view: 'getUserList'},
   { path: '/user/:id', view: 'getUserProfile'},
   { path: '/profile/lists/', view: 'getAllLists'},
   { path: '/list/:id/', view: 'getListById'}

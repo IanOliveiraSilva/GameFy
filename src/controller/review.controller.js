@@ -256,10 +256,11 @@ exports.getAllReviewsFromUser = async (req, res) => {
     const orderBy = sortOptions[sort] || 'created_at DESC';
 
     const reviews = await db.query(
-      `SELECT r.id, r.userid, r.gameId, g.title, g.gameId, r.rating, r.review, r.ispublic, r.created_at
+      `SELECT r.id, r.userid, r.gameId, g.title, g.gameId, r.rating, r.review, r.ispublic, r.created_at, COUNT(c.id) as comment_count
       FROM reviews r
       JOIN games g ON r.gameId = g.gameid 
       JOIN users ON r.userId = users.id
+      LEFT JOIN comments c ON r.id = c.reviewId 
       WHERE r.userid = ${userId} AND r.isPublic
       GROUP BY r.id, users.username, g.title, g.gameid
       ORDER BY ${orderBy}

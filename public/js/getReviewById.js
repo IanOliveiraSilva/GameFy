@@ -1,4 +1,6 @@
 let token = localStorage.getItem('token');
+let parts = window.location.pathname.split('/');
+let reviewId = parts.pop();
 
 function generateStarRating(rating) {
     const maxRating = 5;
@@ -48,9 +50,31 @@ function confirmDelete() {
     });
 }
 
+async function confirmCommentDelete() {
+    const commentResponse = await fetch(`/api/review/comment/${encodeURIComponent(reviewId)}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    const commentsData = await commentResponse.json();
+
+    const response = await fetch(`/api/comment/${encodeURIComponent(commentsData[0].id)}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (response.ok) {
+        document.getElementById('deleteCommentPopup').style.display = 'none';
+        window.location.href = `/review/${reviewId}`;
+    }
+
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
-    const parts = window.location.pathname.split('/');
-    const reviewId = parts.pop();
     const username = localStorage.getItem('username');
 
     const reviewsContainer = document.getElementById('reviews');
@@ -175,31 +199,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
 
-
-            const shareButton = document.createElement('a');
-            shareButton.innerHTML = `<i class="fa-solid fa-share action-cell"></i>`;
-            shareButton.addEventListener('click', function () {
-                html2canvas(reviewsContainer).then(function (canvas) {
-                    let link = document.createElement('a');
-                    link.href = canvas.toDataURL('image/png');
-                    link.download = 'screenshot.png';
-                    link.click();
-                });
-            });
-
             buttonsContainer.appendChild(editButton);
             buttonsContainer.insertAdjacentHTML('beforeend', '&emsp;');
             buttonsContainer.appendChild(deleteButton);
             reviewsContainer.appendChild(buttonsContainer);
         }
 
+        const commentDiv = document.createElement('div');
+        const form = document.createElement('form');
+
+        const commentTitle = document.createElement('span');
+        commentTitle.textContent = 'Comentarios';
+        commentTitle.classList.add('span-text');
+
+        commentDiv.insertAdjacentHTML('beforeend', '<hr>');
+        commentDiv.appendChild(commentTitle);
+        commentDiv.insertAdjacentHTML('beforeend', '<br>');
+
         if (username != reviewsData[0].username) {
-            // FORM COMENTARIO
-            const commentDiv = document.createElement('div');
-            commentDiv.classList.add('comment-section');
-
-            const form = document.createElement('form');
-
+            // POST COMMENT
 
             const comentarioLabel = document.createElement('label');
             comentarioLabel.classList.add('comment-label')
@@ -214,7 +232,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             form.addEventListener('submit', async function (event) {
                 event.preventDefault();
-                const reviewId = localStorage.getItem('reviewId');
                 const comment = comentarioInput.value;
                 const token = localStorage.getItem('token');
 
@@ -233,7 +250,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     if (response.ok) {
                         const data = await response.json();
-                        window.location.href = '/getAllReviewsComments';
+                        window.location.href = `/review/${reviewId}`;
                     } else {
                         const data = await response.json();
                         alert(`Erro: ${data.message}`);
@@ -252,14 +269,94 @@ document.addEventListener('DOMContentLoaded', async () => {
                 form.dispatchEvent(new Event('submit'));
             });
 
+
             commentDiv.appendChild(form);
             commentDiv.appendChild(commentButton);
-            reviewsContainer.appendChild(commentDiv)
-
-
-
-
+            commentDiv.insertAdjacentHTML('beforeend', '<br>');
+            commentDiv.insertAdjacentHTML('beforeend', '<br>');
+            commentDiv.insertAdjacentHTML('beforeend', '<br>');
+            reviewsContainer.appendChild(commentDiv);
         }
+        reviewsContainer.appendChild(commentDiv);
+
+        // GET COMMENTS
+        const commentResponse = await fetch(`/api/review/comment/${encodeURIComponent(reviewId)}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao obter comentários');
+        }
+
+        const commentsData = await commentResponse.json();
+
+        commentsData.forEach((comment) => {
+            const table = document.createElement('table');
+
+            const tbody = document.createElement('tbody');
+
+            const userRow = document.createElement('tr');
+            const userCell = document.createElement('td');
+
+            const userText = document.createElement('p');
+            userText.textContent = `${comment.username}`;
+
+            const commentTextCell = document.createElement('span');
+            commentTextCell.textContent = `${comment.comment}`;
+
+            const buttonsContainer = document.createElement('div');
+            buttonsContainer.classList.add('button-container', 'text-right');
+
+            if (comment.username == username) {
+                const editButton = document.createElement('a');
+                editButton.innerHTML = `<i class="fas fa-pencil-alt" style="color: #ffffff; font-size: 25px;"></i>`;
+                editButton.classList.add('edit-button');
+                editButton.href = '/updateComment';
+                editButton.addEventListener('click', () => {
+                    localStorage.setItem('reviewId', comment.reviewid);
+                    localStorage.setItem('comment', comment.comment);
+                    localStorage.setItem('commentId', comment.id);
+                });
+
+                let popup = document.getElementById('deleteCommentPopup');
+                let closeButtonDelete = document.getElementById('closePopupDeleteComment');
+
+                const deleteButton = document.createElement('span');
+                deleteButton.innerHTML = '<i class="fas fa-trash" style="color: #ffffff; font-size: 25px;"></i> ';
+                deleteButton.classList.add('delete-button');
+                deleteButton.addEventListener('click', async () => {
+                    document.getElementById('deleteCommentPopup').classList.add('active');
+                });
+
+                closeButtonDelete.addEventListener('click', function () {
+                    document.getElementById('deleteCommentPopup').classList.remove('active');
+                });
+
+                window.addEventListener('click', function (event) {
+                    if (event.target == popup) {
+                        popup.classList.remove('active');
+                    }
+                });
+
+                buttonsContainer.appendChild(editButton);
+                buttonsContainer.insertAdjacentHTML('beforeend', '&emsp;');
+                buttonsContainer.appendChild(deleteButton);
+            }
+
+            userCell.appendChild(userText);
+            userCell.appendChild(commentTextCell);
+            userRow.appendChild(userCell);
+            userRow.appendChild(buttonsContainer);
+            tbody.appendChild(userRow);
+
+            table.appendChild(tbody);
+            table.insertAdjacentHTML('beforeend', '<br>');
+            reviewsContainer.appendChild(table);
+        });
+
     } catch (error) {
         console.error('Erro ao buscar revisões:', error);
     }

@@ -209,6 +209,7 @@ button {
   transition: opacity 0.3s ease, transform 0.3s ease;
   cursor: pointer;
   font-weight: 800;
+  z-index: -10000;
 }
 
 .popup.active {

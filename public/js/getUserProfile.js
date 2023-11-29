@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </span>
                     </a>&emsp;
 
-                    <a href="/getAllLists" class="btn btn-primary">
+                    <a href="/lists/${profileData.body.profile.userprofile}" class="btn btn-primary">
                     <i class="fas fa-list-ul"></i> 
                     <span class="stat-count">
                     ${profileData.body.profile.contadorlists !== null ? profileData.body.profile.contadorlists : 0}

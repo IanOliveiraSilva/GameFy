@@ -6,6 +6,5 @@ router.get('/game/:id', gameController.getGameById);
 
 router.get('/games/tendency', gameController.getGamesTendency);
 
-router.put('/game/:id', userController.AuthMiddleware, gameController.playedGame)
 
 module.exports = router;

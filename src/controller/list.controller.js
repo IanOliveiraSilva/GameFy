@@ -4,73 +4,20 @@ const axios = require("axios");
 const db = require("../config/db");
 const RAWG_API_KEY = process.env.RAWG_API_KEY;
 
-exports.createList = async (req, res) => {
-    const { name, description, gameIds, isPublic } = req.body;
-    const userId = req.user.id;
+const { ListService } = require("../services/list.service");
 
+const listService = new ListService();
+
+exports.createList = async (req, res, next) => {
     try {
-        if (!name) {
-            return res.status(400).json({ message: 'Nome é obrigatório!' });
-        }
+        const { name, description, gameIds, isPublic } = req.body;
+        const userId = req.user.id;
 
-        const { rows: [list] } = await db.query(
-            `INSERT INTO lists 
-            (name, 
-            description, 
-            gameIds, 
-            isPublic,
-            userId)
-            VALUES ($1,$2,$3,$4,$5)
-            RETURNING *`,
-            [name, description, gameIds, isPublic, userId]
-        );
+        const response = await listService.createList({ name, description, gameIds, isPublic, userId });
+        return res.status(200).json(response);
 
-        for (const id of gameIds) {
-            const rawgResponse = await axios.get(`https://api.rawg.io/api/games/${id}?key=${RAWG_API_KEY}`);
-            if (rawgResponse.status === 200 && rawgResponse.data && rawgResponse.data.Response === 'True') {
-                const gameData = rawgResponse.data;
-                let { rows: [game] } = await db.query('SELECT medianotas FROM games WHERE gameid = $1', [id]);
-
-                if (!game) {
-                    const { rows: [newGame] } = await db.query(
-                        `INSERT INTO games (gameId, title, image)
-                        VALUES ($1, $2, $3)
-                        RETURNING id`,
-                        [gameData.id, gameData.name, gameData.background_image]
-                    );
-                    game = newGame;
-                }
-            }
-        }
-
-        // Contador para a review
-        const { rows: [userProfile] } = await db.query(
-            'SELECT "contadorlists" FROM user_profile WHERE userId = $1',
-            [userId]
-        );
-
-        if (userProfile) {
-            const currentListsCount = userProfile.contadorlists || 0;
-            const newListsCount = currentListsCount + 1;
-
-            await db.query(
-                'UPDATE user_profile SET "contadorlists" = $1 WHERE userId = $2',
-                [newListsCount, userId]
-            );
-        }
-
-        res.status(201).json({
-            message: 'Lista criada com sucesso!',
-            body: {
-                list
-            }
-        });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: 'Um erro aconteceu enquanto a lista era criada',
-            error
-        });
+        next(error);
     }
 };
 
@@ -151,12 +98,12 @@ exports.getListByUser = async (req, res) => {
 
         if (userIdQuery.rows.length === 0) {
             return res.status(400).json({
-              message: 'O usuário não foi encontrado'
+                message: 'O usuário não foi encontrado'
             });
-          }
-      
+        }
+
         const userId = userIdQuery.rows[0].userid;
-      
+
         const lists = await db.query(
             `SELECT l.id, l.gameids, u.username AS user, l.name AS list_name, l.description AS list_description, l.created_at AS Created_At
             FROM lists l

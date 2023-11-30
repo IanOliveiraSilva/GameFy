@@ -405,11 +405,11 @@ class UserService {
   async getRatingCount({ userId }) {
     const ratingCount = await db.query(
       `
-      SELECT rating, COUNT(*) 
+      SELECT u.username, rating, COUNT(*) 
       FROM reviews r
       JOIN users u ON r.userId = u.id
       WHERE userId = $1
-      GROUP BY rating
+      GROUP BY rating, u.username
       ORDER BY rating DESC;      
       `,
       [userId]
@@ -432,11 +432,11 @@ class UserService {
 
     const ratingCount = await db.query(
       `
-      SELECT rating, COUNT(*) 
+      SELECT u.username, rating, COUNT(*) 
       FROM reviews r
       JOIN users u ON r.userId = u.id
       WHERE userId = $1
-      GROUP BY rating
+      GROUP BY rating, u.username
       ORDER BY rating DESC;      
       `,
       [userId]

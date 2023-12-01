@@ -1,26 +1,14 @@
-@import url("https://fonts.googleapis.com/css2?family=Nexa:wght@400;500;700&display=swap");
-
-*,
-::before,
-::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-ul {
-  padding: 0;
-  margin: 0;
-}
+@import url('https://fonts.googleapis.com/css2?family=Nexa:wght@400;500;700&display=swap');
 
 body {
-  font-family: "Nexa", sans-serif;
+  font-family: 'Nexa', sans-serif;
   font-size: 16px;
   line-height: 1.6;
-  background: url("../images/purple-planet-saturn-rings-nebula-galaxy-astronomy-stars-4480x2520-6416.jpg")
-    center center no-repeat;
+  background-image: url('../images/purple-planet-saturn-rings-nebula-galaxy-astronomy-stars-4480x2520-6416.jpg');
   background-size: cover;
   background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center;
   backdrop-filter: blur(2.5px);
 }
 
@@ -44,11 +32,13 @@ body {
 .section-title {
   font-size: 24px;
   font-weight: 800;
-  margin-bottom: 20px;
+  margin-bottom: 80px;
   color: #ffffff;
+  white-space: nowrap;
   text-shadow: 2px 2px 4px #8a63a9;
   letter-spacing: 1px;
 }
+
 
 .section-text {
   font-size: 18px;
@@ -76,6 +66,7 @@ body {
   text-align: center;
 }
 
+
 .index-container-tendency {
   display: flex;
   align-items: center;
@@ -89,15 +80,16 @@ body {
   text-align: center;
 }
 
+
 .img-poster {
   box-shadow: 0 0 6px rgb(255, 255, 255);
   height: 250px;
-  width: 100%;
-  text-align: center;
+  width: 500px;
   margin-top: 26px;
   transition: transform 0.2s ease-in-out;
   list-style-type: none;
   object-fit: cover;
+  margin-left: 150px;
 }
 
 .img-poster:hover {
@@ -106,24 +98,67 @@ body {
   box-shadow: 2px 2px 10px rgb(233, 5, 241);
 }
 
+
+#games-tendency .carousel-inner .carousel-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.4s, transform 0.4s ease-in-out;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+#games-tendency .carousel-inner .carousel-item.active {
+  position: relative;
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+
 #games-tendency .carousel-control-prev,
 #games-tendency .carousel-control-next {
-  width: 5%;
-  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(233, 5, 241, 1) 0%, rgba(0, 0, 0, 1) 100%);
+  color: #fff;
+  line-height: 40px;
+  text-align: center;
+  opacity: 0.7;
+  transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s, background 0.3s;
+  top: 50%;
+  transform: translateY(-50%);
+  box-shadow: 0 0 20px rgb(255, 255, 255);
+}
+
+#games-tendency .carousel-control-prev:hover,
+#games-tendency .carousel-control-next:hover {
+  opacity: 1;
+  transform: scale(1.2);
+  box-shadow: 0 0 20px rgba(233, 5, 241, 1);
+  background: radial-gradient(circle, rgb(233, 5, 241, 1) 0%, rgb(0, 0, 0) 100%);
 }
 
 #games-tendency .carousel-control-prev {
-  left: -5.5%;
+  left: 10px;
 }
 
 #games-tendency .carousel-control-next {
-  right: -5%;
+  right: 10px;
 }
 
-.game-title {
-  font-size: 20px;
+.game-title{
+  text-align: center;
+  font-size: 24px;
   font-weight: 800;
-  margin-bottom: 20px;
+  margin-top: 20px;
   color: #ffffff;
   white-space: nowrap;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);

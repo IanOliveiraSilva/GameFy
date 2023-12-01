@@ -1,33 +1,25 @@
 document.addEventListener('DOMContentLoaded', async () => {
-    // GAMES TENDENCY
-    const response = await fetch(`/api/games/tendency`, {
+  const response = await fetch(`/api/games/tendency`, {
       method: 'GET'
-    });
+  });
 
-    const gamesData = await response.json();
+  const gamesData = await response.json();
+  const carouselInner = document.querySelector('#games-tendency .carousel-inner');
 
-    const carouselInner = document.createElement('div');
-    carouselInner.classList.add('carousel-inner');
-
-    let isFirstItem = true;
-
-    for (const game of gamesData.games) {
-
+  for (const [index, game] of gamesData.games.entries()) {
       const carouselItem = document.createElement('div');
       carouselItem.classList.add('carousel-item');
-
-      if (isFirstItem) {
-        carouselItem.classList.add('active');
-        isFirstItem = false;
+      if (index === 0) {
+          carouselItem.classList.add('active');
       }
 
       const gameLink = document.createElement('a');
-      gameLink.href = `/game/${game.gameid}`;  
+      gameLink.href = `/game/${game.gameid}`;
 
       const posterImage = document.createElement('img');
       posterImage.src = game.image;
       posterImage.alt = 'Poster do Jogo';
-      posterImage.classList.add('d-block', 'img-poster');
+      posterImage.classList.add('d-block', 'img-fluid');
 
       const gameTitle = document.createElement('h5');
       gameTitle.textContent = game.title;
@@ -35,14 +27,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       gameLink.appendChild(posterImage);
       carouselItem.appendChild(gameLink);
-      carouselItem.insertAdjacentHTML('beforeend', '&emsp;')
       carouselItem.appendChild(gameTitle);
       carouselInner.appendChild(carouselItem);
-    }
+  }
 
-    const carouselSection = document.querySelector('#games-tendency .carousel-inner');
-    carouselSection.appendChild(carouselInner);
-
-    $('#games-tendency').carousel({
-    });
-  });
+  $('#games-tendency').carousel();
+});

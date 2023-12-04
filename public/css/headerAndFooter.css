@@ -30,6 +30,7 @@ header {
   border-radius: 0 0 10px 10px;
   background: linear-gradient(to right, #000000, #3f063c);
   box-shadow: 0 0 15px rgba(233, 5, 241, 0.6);
+
 }
 
 .container {
@@ -250,4 +251,8 @@ button {
 
 .cursor-pointer {
   cursor: pointer;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> e2d1cef25b090fab83c3938b112a22a0c8e92f4e

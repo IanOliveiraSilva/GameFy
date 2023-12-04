@@ -10,6 +10,6 @@ router.get('/review/comment/:id', userController.AuthMiddleware, commentControll
 
 router.delete('/comment/:id', userController.AuthMiddleware, commentController.deleteComment);
 
-router.put('/comment', userController.AuthMiddleware, commentController.updateComment);
+router.put('/comment/:id', userController.AuthMiddleware, commentController.updateComment);
 
 module.exports = router;

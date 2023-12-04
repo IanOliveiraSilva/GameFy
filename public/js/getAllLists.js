@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     for (const list of listData) {
 
-
       const tbody = document.createElement('tbody');
 
       const nameRow = document.createElement('tr');
@@ -111,6 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       table.appendChild(tbody);
       listContainer.appendChild(table);
     }
+
   } catch (error) {
     console.error('Erro ao buscar listas:', error);
   }

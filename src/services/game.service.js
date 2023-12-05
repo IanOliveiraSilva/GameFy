@@ -1,9 +1,12 @@
 const axios = require("axios");
 const RAWG_API_KEY = process.env.RAWG_API_KEY;
-const db = require("../config/db");
 
 const hltb = require('howlongtobeat');
 const hltbService = new hltb.HowLongToBeatService();
+
+const { GameRepository } = require("../repositories/game.repository");
+
+const gameRepository = new GameRepository();
 
 class GameService {
 
@@ -33,13 +36,7 @@ class GameService {
                 gameData.gameplayCompletionist = hltbResult[0].gameplayCompletionist;
             }
 
-            let { rows: [mediagames] } = await db.query(
-                `
-              SELECT medianotas
-              FROM games 
-              WHERE gameId = $1
-              `,
-                [id]);
+            const mediagames = await gameRepository.getMediaNotas(id);
 
             if (!mediagames) {
                 mediagames = {
@@ -56,21 +53,9 @@ class GameService {
     }
 
     async getGameTendency({ }) {
-        const { rows: gamesWithReviewCounts } = await db.query(
-            `
-        SELECT games.gameId, games.image, games.title, COUNT(reviews.id) AS review_count
-        FROM games
-        LEFT JOIN reviews ON games.gameid = reviews.gameId
-        WHERE reviews.ispublic = true OR reviews.ispublic IS NULL
-        GROUP BY games.gameid, games.title
-        ORDER BY review_count DESC
-        LIMIT 4
-        `
-        );
+        const gamesWithReviewCounts = await gameRepository.getgamesWithReviewCounts();
 
-        return {
-            games: gamesWithReviewCounts
-        }
+        return gamesWithReviewCounts;
     }
 }
 

@@ -1,5 +1,8 @@
 const router = require("express-promise-router")();
-const userController = require("../controller/user.controller");
+const userController = require("../controllers/user.controller");
+const { UserMiddleware } = require("../middlewares/auth-middleware");
+
+const userMiddleware = new UserMiddleware();
 
 /**
  * @swagger
@@ -98,7 +101,7 @@ router.post("/user/login", userController.login);
 
 router.post(
   "/user/changePassword",
-  userController.AuthMiddleware,
+  userMiddleware.auth,
   userController.changePassword
 );
 
@@ -141,7 +144,7 @@ router.post(
  */
 router.post(
   "/user/profile",
-  userController.AuthMiddleware,
+  userMiddleware.auth,
   userController.createUserProfile
 );
 
@@ -199,11 +202,7 @@ router.post(
  *         scheme: bearer
  *         bearerFormat: JWT
  */
-router.get(
-  "/user/profile",
-  userController.AuthMiddleware,
-  userController.getUserProfile
-);
+router.get("/user/profile", userMiddleware.auth, userController.getUserProfile);
 
 /**
  * @swagger
@@ -272,7 +271,7 @@ router.get("/user/:userprofile", userController.getProfileByUser);
 
 router.get(
   "/searchUsers/:user",
-  userController.AuthMiddleware,
+  userMiddleware.auth,
   userController.searchUsers
 );
 
@@ -336,7 +335,7 @@ router.get(
  */
 router.put(
   "/user/profile",
-  userController.AuthMiddleware,
+  userMiddleware.auth,
   userController.updateUserProfile
 );
 
@@ -400,7 +399,7 @@ router.put(
  */
 router.patch(
   "/user/profile",
-  userController.AuthMiddleware,
+  userMiddleware.auth,
   userController.updateUserProfilePartially
 );
 
@@ -442,15 +441,11 @@ router.patch(
  *         scheme: bearer
  *         bearerFormat: JWT
  */
-router.get(
-  "/user",
-  userController.AuthMiddleware,
-  userController.GetRatingCount
-);
+router.get("/user", userMiddleware.auth, userController.GetRatingCount);
 
 router.get(
   "/rating/:userProfile",
-  userController.AuthMiddleware,
+  userMiddleware.auth,
   userController.GetRatingCountByUser
 );
 

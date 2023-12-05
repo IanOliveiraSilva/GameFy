@@ -1,13 +1,19 @@
-const router = require('express-promise-router')();
-const listController = require('../controller/list.controller');
-const userController = require('../controller/user.controller');
+const router = require("express-promise-router")();
+const listController = require("../controllers/list.controller");
+const { UserMiddleware } = require("../middlewares/auth-middleware");
 
-router.post('/list/create', userController.AuthMiddleware, listController.createList);
+const userMiddleware = new UserMiddleware();
 
-router.get('/profile/lists', userController.AuthMiddleware, listController.getAllLists);
+router.post("/list/create", userMiddleware.auth, listController.createList);
 
-router.get('/list/:id', userController.AuthMiddleware, listController.getListById);
+router.get("/profile/lists", userMiddleware.auth, listController.getAllLists);
 
-router.get('/user/list/:userProfile', userController.AuthMiddleware, listController.getListByUser);
+router.get("/list/:id", userMiddleware.auth, listController.getListById);
+
+router.get(
+  "/user/list/:userProfile",
+  userMiddleware.auth,
+  listController.getListByUser
+);
 
 module.exports = router;

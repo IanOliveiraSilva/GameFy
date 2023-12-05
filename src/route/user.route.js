@@ -443,13 +443,13 @@ router.patch(
  *         bearerFormat: JWT
  */
 router.get(
-  "/user/rating",
+  "/user",
   userController.AuthMiddleware,
   userController.GetRatingCount
 );
 
 router.get(
-  "/rating/id",
+  "/rating/:userProfile",
   userController.AuthMiddleware,
   userController.GetRatingCountByUser
 );

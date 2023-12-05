@@ -99,28 +99,53 @@ body {
 }
 
 
+<<<<<<< HEAD
 #games-tendency .carousel-inner .carousel-item {
+=======
+#games-tendency .carousel-inner .carousel-item.next,
+#games-tendency .carousel-inner .carousel-item.right {
+  transform: rotateY(-180deg);
+}
+
+#games-tendency .carousel-inner .carousel-item.prev,
+#games-tendency .carousel-inner .carousel-item.left {
+  transform: rotateY(180deg);
+}
+
+#games-tendency .carousel-inner .carousel-item {
+  transition: opacity 1s;
+>>>>>>> e2d1cef25b090fab83c3938b112a22a0c8e92f4e
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   opacity: 0;
+<<<<<<< HEAD
   transform: scale(0.8);
   transition: opacity 0.4s, transform 0.4s ease-in-out;
   border-radius: 10px;
   overflow: hidden;
+=======
+>>>>>>> e2d1cef25b090fab83c3938b112a22a0c8e92f4e
 }
 
 #games-tendency .carousel-inner .carousel-item.active {
   position: relative;
   opacity: 1;
+<<<<<<< HEAD
   transform: scale(1);
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
 
 
+=======
+}
+
+
+
+>>>>>>> e2d1cef25b090fab83c3938b112a22a0c8e92f4e
 #games-tendency .carousel-control-prev,
 #games-tendency .carousel-control-next {
   width: 40px;

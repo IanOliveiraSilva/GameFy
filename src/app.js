@@ -10,6 +10,9 @@ const app = express();
 app.set("views", path.join(__dirname, "..", "public", "views"));
 app.set("view engine", "ejs");
 
+// // Configurar para reconhecer subpastas
+// app.set("view options", { delimiter: '?' });
+
 // Middleware para processar dados JSON e formulários
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

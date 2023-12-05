@@ -3,7 +3,7 @@ const RAWG_API_KEY = process.env.RAWG_API_KEY;
 const axios = require("axios");
 
 class ListService {
-    async createList({name, description, gameIds, isPublic, userId}){
+    async createList({ name, description, gameIds, isPublic, userId }) {
         if (!name) {
             return res.status(400).json({ message: 'Nome é obrigatório!' });
         }
@@ -54,7 +54,7 @@ class ListService {
             );
         }
 
-        return{
+        return {
             message: 'Lista criada com sucesso!',
             body: {
                 list
@@ -62,7 +62,7 @@ class ListService {
         }
     }
 
-    async getAllLists({ userId }){
+    async getAllLists({ userId }) {
         const lists = await db.query(
             `SELECT l.id,l.gameIds, l.ispublic, u.username AS user, l.name AS list_name, l.description AS list_description, l.created_at AS Created_At
             FROM lists l
@@ -82,7 +82,7 @@ class ListService {
         return lists.rows;
     }
 
-    async getListById({ id }){
+    async getListById({ id }) {
         const lists = await db.query(
             `
             SELECT 
@@ -114,7 +114,7 @@ class ListService {
         return lists.rows;
     }
 
-    async getListByUser({ userProfile}){
+    async getListByUser({ userProfile }) {
         const userIdQuery = await db.query('SELECT userId FROM user_profile WHERE LOWER(userProfile) LIKE $1', [userProfile]);
 
         if (userIdQuery.rows.length === 0) {
@@ -136,12 +136,47 @@ class ListService {
         );
 
         if (lists.rows.length === 0) {
-            return res.status(404).json({
+            return {
                 message: 'Não foi possível encontrar a lista com o usuario fornecido.'
-            });
+            };
         }
 
         return lists.rows;
+    }
+
+    async deleteList({ id, userId }) {
+        const { rows } = await db.query(
+            `DELETE FROM lists
+        WHERE userId = $1 AND id = $2
+        RETURNING *`,
+            [userId, id]
+        );
+
+        if (rows.length === 0) {
+            return {
+                message: "A Lista que você tentou deletar não existe."
+            };
+        }
+
+        const { rows: [userProfile] } = await db.query(
+            'SELECT "contadorlists" FROM user_profile WHERE userId = $1',
+            [userId]
+        );
+
+        if (userProfile) {
+            const currentListsCount = userProfile.contadorlists || 0;
+            const newListsCount = currentListsCount - 1;
+
+            await db.query(
+                'UPDATE user_profile SET "contadorlists" = $1 WHERE userId = $2',
+                [newListsCount, userId]
+            );
+        }
+
+        return{
+            message: "Lista deletada com sucesso!",
+            list: rows[0]
+        };
     }
 }
 

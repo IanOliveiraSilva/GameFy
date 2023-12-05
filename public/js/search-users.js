@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
                 if (response.ok) {
                     const responseBody = await response.json();
-                    const users = responseBody.body.users;
+                    const users = responseBody.users;
     
                     users.forEach(user => {
                         const suggestion = document.createElement('div');

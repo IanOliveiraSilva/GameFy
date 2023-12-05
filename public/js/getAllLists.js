@@ -86,11 +86,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         const deleteButton = document.createElement('a');
         deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
         deleteButton.classList.add('delete-button');
-        deleteButton.href = '/getAllLists'
+        deleteButton.href = '/profile/lists'
         deleteButton.addEventListener('click', () => {
           const confirmDelete = confirm('Tem certeza que deseja excluir a lista?');
             if (confirmDelete) {
-              const response = fetch(`/api/list/?id=${encodeURIComponent(list.id)}`, {
+              const response = fetch(`/api/list/${encodeURIComponent(list.id)}`, {
                 method: 'DELETE',
                 headers: {
                   'Authorization': `Bearer ${token}`

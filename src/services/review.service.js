@@ -135,7 +135,7 @@ class ReviewService {
                 message: 'Não foi possível encontrar a review com o ID fornecido.'
             });
         }
-        return review.rows;
+        return review.rows
     }
 
     async deleteReview({ id, userId }) {

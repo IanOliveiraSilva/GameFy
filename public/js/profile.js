@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const details = document.createElement('div');
 
-  if (profileData.body.profile.familyname != null) {
+  if (profileData.body.familyname != null) {
     details.innerHTML =
       `
     <div class="profile-container">
@@ -31,9 +31,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             <i class="fas fa-pencil-alt" style="font-size: 30px;"></i>
             </a>
         
-                <h1 class="profile-name">${profileData.body.profile.givenname} ${profileData.body.profile.familyname}</h1> 
-                <p class="profile-user">@${profileData.body.profile.userprofile}</p>
-                <p class="profile-bio">${profileData.body.profile.bio}</p>
+                <h1 class="profile-name">${profileData.body.givenname} ${profileData.body.familyname}</h1> 
+                <p class="profile-user">@${profileData.body.userprofile}</p>
+                <p class="profile-bio">${profileData.body.bio}</p>
                 
                 </div>
                 <div class="profile-info">
@@ -47,33 +47,33 @@ document.addEventListener('DOMContentLoaded', async () => {
               <div id="additionalInfo" style="display: none;">
 
                     <li class="list-group-item li-profile">
-                    <strong><i class="fas fa-calendar-alt"></i></strong>  ${profileData.body.profile.birthday}
+                    <strong><i class="fas fa-calendar-alt"></i></strong>  ${profileData.body.birthday}
                     </li>
 
                     <li class="list-group-item li-profile uppercase-text">
-                    <strong><i class="fas fa-map-marker-alt"></i> </strong> ${profileData.body.profile.location}
+                    <strong><i class="fas fa-map-marker-alt"></i> </strong> ${profileData.body.location}
                     </li>
 
                     <li class="list-group-item li-profile ">
                     <i class="fab fa-twitter"></i> <strong>
-                    <a href="https://www.twitter.com/${profileData.body.profile.socialmediax}" target="_blank">
-                    ${profileData.body.profile.socialmediax !== null && profileData.body.profile.socialmediax !== "null" && profileData.body.profile.socialmediax !== "" ? profileData.body.profile.socialmediax : '___'} 
+                    <a href="https://www.twitter.com/${profileData.body.socialmediax}" target="_blank">
+                    ${profileData.body.socialmediax !== null && profileData.body.socialmediax !== "null" && profileData.body.socialmediax !== "" ? profileData.body.socialmediax : '___'} 
                     </a>
                     </strong>
                      </li>
      
                     <li class="list-group-item li-profile">
                     <i class="fab fa-instagram"></i> <strong>
-                    <a href="https://www.instagram.com/${profileData.body.profile.socialmediainstagram}" target="_blank">
-                    ${profileData.body.profile.socialmediainstagram !== null && profileData.body.profile.socialmediax !== "null" && profileData.body.profile.socialmediax !== "" ? profileData.body.profile.socialmediainstagram : '___'}
+                    <a href="https://www.instagram.com/${profileData.body.socialmediainstagram}" target="_blank">
+                    ${profileData.body.socialmediainstagram !== null && profileData.body.socialmediax !== "null" && profileData.body.socialmediax !== "" ? profileData.body.socialmediainstagram : '___'}
                     </a>
                     </strong>
                     </li>
     
                     <li class="list-group-item li-profile">
                     <i class="fab fa-tiktok"></i> <strong>
-                    <a href="https://www.tiktok.com/@${profileData.body.profile.socialmediatiktok}" target="_blank">
-                    ${profileData.body.profile.socialmediatiktok !== null && profileData.body.profile.socialmediax !== "null" && profileData.body.profile.socialmediax !== "" ? profileData.body.profile.socialmediatiktok : '___'}
+                    <a href="https://www.tiktok.com/@${profileData.body.socialmediatiktok}" target="_blank">
+                    ${profileData.body.socialmediatiktok !== null && profileData.body.socialmediax !== "null" && profileData.body.socialmediax !== "" ? profileData.body.socialmediatiktok : '___'}
                     </a>
                     </strong>
                     </li><br><br><br>
@@ -83,14 +83,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <a href="/profile/reviews" class="btn btn-primary">
                     Reviews:
                     <span class="stat-count">
-                    ${profileData.body.profile.contadorreviews !== null ? profileData.body.profile.contadorreviews : 0}
+                    ${profileData.body.contadorreviews !== null ? profileData.body.contadorreviews : 0}
                     </span>
                     </a>&emsp;
 
                     <a href="/profile/lists" class="btn btn-primary">
                     <i class="fas fa-list-ul"></i> 
                     <span class="stat-count">
-                    ${profileData.body.profile.contadorlists !== null ? profileData.body.profile.contadorlists : 0}
+                    ${profileData.body.contadorlists !== null ? profileData.body.contadorlists : 0}
                     </span>
                     </a>&emsp;
 
@@ -140,16 +140,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const editProfileLink = document.querySelector('#edit-profile-link');
   editProfileLink.addEventListener('click', () => {
-    localStorage.setItem('ProfileName', profileData.body.profile.givenname);
-    localStorage.setItem('familyname', profileData.body.profile.familyname);
-    localStorage.setItem('bio', profileData.body.profile.bio);
-    localStorage.setItem('location', profileData.body.profile.location);
-    localStorage.setItem('socialmediainstagram', profileData.body.profile.socialmediainstagram);
-    localStorage.setItem('socialmediatiktok', profileData.body.profile.socialmediatiktok);
-    localStorage.setItem('socialmediax', profileData.body.profile.socialmediax);
-    localStorage.setItem('birthday', profileData.body.profile.birthday);
-    localStorage.setItem('userprofile', profileData.body.profile.userprofile);
-    localStorage.setItem('icon', profileData.body.profile.icon);
+    localStorage.setItem('ProfileName', profileData.body.givenname);
+    localStorage.setItem('familyname', profileData.body.familyname);
+    localStorage.setItem('bio', profileData.body.bio);
+    localStorage.setItem('location', profileData.body.location);
+    localStorage.setItem('socialmediainstagram', profileData.body.socialmediainstagram);
+    localStorage.setItem('socialmediatiktok', profileData.body.socialmediatiktok);
+    localStorage.setItem('socialmediax', profileData.body.socialmediax);
+    localStorage.setItem('birthday', profileData.body.birthday);
+    localStorage.setItem('userprofile', profileData.body.userprofile);
+    localStorage.setItem('icon', profileData.body.icon);
   });
 
 

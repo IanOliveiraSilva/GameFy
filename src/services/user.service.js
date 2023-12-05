@@ -190,7 +190,7 @@ class UserService {
 
     return {
       message: "Perfil encontrado com sucesso!",
-      perfil: userProfile
+      body: userProfile
     }
   }
 
@@ -229,7 +229,7 @@ class UserService {
 
     return {
       message: "Perfil encontrado com sucesso!",
-      perfil: userProfile
+      body: userProfile
     }
   }
 

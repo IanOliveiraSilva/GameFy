@@ -10,4 +10,7 @@ router.get('/list/:id', userController.AuthMiddleware, listController.getListByI
 
 router.get('/user/list/:userProfile', userController.AuthMiddleware, listController.getListByUser);
 
+router.delete('/list/:id', userController.AuthMiddleware, listController.deleteList);
+
+
 module.exports = router;

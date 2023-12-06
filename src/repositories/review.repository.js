@@ -18,7 +18,6 @@ class ReviewRepository {
             [gameId, title, image]
         );
 
-        console.log(gameId);
         return newGame;
     }
 

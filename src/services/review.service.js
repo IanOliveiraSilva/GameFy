@@ -92,7 +92,7 @@ class ReviewService {
 
         // Checking if there are no reviews found
         if (!review) {
-            throw new Error('The user has no reviews matching the provided ID.');
+            throw new Error('There are no reviews matching if the provided ID.');
         }
 
         // Returning the reviews
@@ -105,7 +105,7 @@ class ReviewService {
 
         // Checking if there are no reviews found
         if (!reviews) {
-            throw new Error('The user has no reviews matching the provided user.');
+            throw new Error('There are no reviews matching the provided user.');
         }
 
         // Returning the reviews
@@ -113,7 +113,7 @@ class ReviewService {
     }
 
     async deleteReview({ id, userId }) {
-        // Deleting the review from the
+        // Deleting the review
         const reviews = await reviewRepository.deleteReview({ id, userId });
 
         // Checking if there are no reviews found

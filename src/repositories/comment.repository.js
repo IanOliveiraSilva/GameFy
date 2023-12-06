@@ -1,22 +1,14 @@
 const db = require("../config/db");
 
 class CommentRepository {
+    async getExistingReview({ reviewId }){
+        const {rows: [existingReview]} = await db.query("SELECT * FROM reviews WHERE id = $1", [reviewId]);
+
+        return existingReview;
+    }
+
     async createComment({ reviewId, comment, userId }) {
-        const {
-            rows: [existingReview],
-        } = await db.query("SELECT * FROM reviews WHERE id = $1", [reviewId]);
-
-        if (!existingReview || !existingReview.id) {
-            throw new Error("Review não encontrada!");
-        }
-
-        if (existingReview.userid === userId) {
-            throw new Error("Você não pode comentar na sua própria review!");
-        }
-
-        const {
-            rows: [newComment],
-        } = await db.query(
+        const {rows: [newComment]} = await db.query(
             `INSERT INTO comments (reviewId, userId, comment)
               VALUES ($1, $2, $3)
               RETURNING *`,

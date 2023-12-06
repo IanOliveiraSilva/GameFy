@@ -94,10 +94,6 @@ class UserRepository {
       [userProfileParam]
     );
 
-    if (!userIdQuery.rows.length) {
-      throw new Error("O usuário não foi encontrado");
-    }
-
     const userId = userIdQuery.rows[0].userid;
 
     // Consulta o perfil do usuário
@@ -116,7 +112,7 @@ class UserRepository {
     return userProfile
   }
 
-  async searchUsers ({ searchQuery }){
+  async searchUsers({ searchQuery }) {
     const { rows: users } = await db.query(
       "SELECT * FROM user_profile WHERE LOWER(userProfile) LIKE $1",
       [`%${searchQuery}%`]
@@ -166,43 +162,18 @@ class UserRepository {
     return newProfile;
   }
 
-  async updateUserProfilePartially({
-    name,
-    familyName,
-    bio,
-    location,
-    birthday,
-    socialmediaInstagram,
-    socialMediaX,
-    socialMediaTikTok,
-    icon,
-    userId
-  }) {
+  async findUserProfile({ userId }) {
     const existingProfile = await db.query(
       "SELECT * FROM user_profile WHERE userId = $1",
       [userId]
     );
 
-    console.log(existingProfile.rows[0]);
+    return existingProfile.rows[0];
 
-    // Atualiza apenas os campos fornecidos no corpo da requisição, mantendo os valores existentes se não forem fornecidos
-    const updatedProfile = {
-      name: name !== undefined ? name : existingProfile.rows[0].name,
-      familyName: familyName !== undefined ? familyName : existingProfile.rows[0].familyname,
-      bio: bio !== undefined ? bio : existingProfile.rows[0].bio,
-      location: location !== undefined ? location : existingProfile.rows[0].location,
-      birthday: birthday !== undefined ? birthday : existingProfile.rows[0].birthday,
-      socialmediaInstagram: socialmediaInstagram !== undefined ? socialmediaInstagram : existingProfile.rows[0].socialmediainstagram,
-      socialMediaX: socialMediaX !== undefined ? socialMediaX : existingProfile.rows[0].socialmediax,
-      socialMediaTikTok: socialMediaTikTok !== undefined ? socialMediaTikTok : existingProfile.rows[0].socialmediatiktok,
-      icon: icon !== undefined ? icon : existingProfile.rows[0].icon,
-    };
-    
+  }
 
-    // Atualiza o perfil no banco de dados
-    const {
-      rows: [newProfile],
-    } = await db.query(
+  async updateUserProfilePartially(updatedProfile, userId) {
+    const newProfile = await db.query(
       `UPDATE user_profile 
        SET name = $1, 
         familyName = $2, 
@@ -224,15 +195,15 @@ class UserRepository {
         updatedProfile.socialmediaInstagram,
         updatedProfile.socialMediaX,
         updatedProfile.socialMediaTikTok,
-        icon,
-        userId,
+        updatedProfile.icon,
+        userId
       ]
     );
 
-    return newProfile;
+    return newProfile.rows[0];
   }
-
-  async getRatingCount({ userId }){
+  
+  async getRatingCount({ userId }) {
     const ratingCount = await db.query(
       `
       SELECT u.username, rating, COUNT(*) 
@@ -245,12 +216,10 @@ class UserRepository {
       [userId]
     );
 
-    const ratings = ratingCount.rows;
-
-    return ratings;
+    return ratingCount.rows;
   }
 
-  async getRatingCountByUser({ userProfile }){
+  async getRatingCountByUser({ userProfile }) {
     const userIdQuery = await db.query(
       "SELECT * FROM user_profile WHERE LOWER(userProfile) LIKE $1",
       [userProfile]
@@ -270,9 +239,7 @@ class UserRepository {
       [userId]
     );
 
-    const ratings = ratingCount.rows;
-
-    return ratings;
+    return ratingCount.rows;
   }
 
 

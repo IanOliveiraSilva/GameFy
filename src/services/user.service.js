@@ -242,19 +242,26 @@ class UserService {
     userId,
   }) {
 
-    const newProfile = await userRepository.updateUserProfilePartially({
-      name,
-      familyName,
-      bio,
-      location,
-      birthday,
-      socialmediaInstagram,
-      socialMediaX,
-      socialMediaTikTok,
-      icon,
-      userId
-    });
+    const userProfile = await userRepository.findUserProfile({ userId });
 
+    if (!userProfile) {
+      throw new Error("User not found");
+    }
+
+    const updatedProfile = {
+      name: name !== undefined ? name : userProfile.name,
+      familyName: familyName !== undefined ? familyName : userProfile.familyname,
+      bio: bio !== undefined ? bio : userProfile.bio,
+      location: location !== undefined ? location : userProfile.location,
+      birthday: birthday !== undefined ? birthday : userProfile.birthday,
+      socialmediaInstagram: socialmediaInstagram !== undefined ? socialmediaInstagram : userProfile.socialmediainstagram,
+      socialMediaX: socialMediaX !== undefined ? socialMediaX : userProfile.socialmediax,
+      socialMediaTikTok: socialMediaTikTok !== undefined ? socialMediaTikTok : userProfile.socialmediatiktok,
+      icon: icon !== undefined ? icon : userProfile.icon,
+    };
+  
+    const newProfile = await userRepository.updateUserProfilePartially(updatedProfile, userId)
+    
     return {
       message: "Usuario atualizado com sucesso!",
       user: newProfile,

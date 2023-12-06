@@ -2,24 +2,28 @@ const db = require("../config/db");
 
 class ReviewRepository {
 
-    async createReview({ gameId, title, rating, comment, isPublic, image, userId }) {
+    async findGame({ gameId }){
+        const { rows: [existingGame] } = await db.query('SELECT * FROM games WHERE gameId = $1', [gameId]);
 
-        let { rows: [existingGame] } = await db.query('SELECT * FROM games WHERE gameId = $1', [gameId]);
+        return existingGame;
+    }
 
-        if (existingGame && existingGame.gameid) {
-            gameId = existingGame.gameid;
-        } else {
-            const { rows: [newGame] } = await db.query(
-                `
-                INSERT INTO games (gameid, title, image)
-                VALUES ($1, $2, $3) 
-                RETURNING *
-                `,
-                [gameId, title, image]
-            );
-            gameId = newGame.gameid;
-        }
+    async insertNewGame({ gameId, title, image}){
+        const { rows: [newGame] } = await db.query(
+            `
+            INSERT INTO games (gameid, title, image)
+            VALUES ($1, $2, $3) 
+            RETURNING *
+            `,
+            [gameId, title, image]
+        );
 
+        console.log(gameId);
+        return newGame;
+    }
+
+    
+    async createReview({ gameId, rating, comment, isPublic, userId }) {  
         const { rows: [review] } = await db.query(
             `INSERT INTO reviews (userId, gameId, rating,
                 review,
@@ -38,7 +42,6 @@ class ReviewRepository {
         );
 
         return review;
-
     }
 
     async getAllReviews({ userId, sort }) {
@@ -132,6 +135,22 @@ class ReviewRepository {
         return reviews.rows;
     }
 
+    async getContadorReviews({ userId }){
+        const { rows: [userProfile] } = await db.query(
+            'SELECT "contadorreviews" FROM user_profile WHERE userId = $1',
+            [userId]
+        );
+
+        return userProfile;
+    }
+
+    async updateContadorReviews({ newReviewCount, userId }){
+        await db.query(
+            'UPDATE user_profile SET "contadorreviews" = $1 WHERE userId = $2',
+            [newReviewCount, userId]
+        );
+    }
+
     async deleteReview({ id, userId }) {
         await db.query('DELETE FROM comments WHERE reviewid = $1', [id]);
 
@@ -140,11 +159,6 @@ class ReviewRepository {
        WHERE userId = $1 AND id = $2
        RETURNING *`,
             [userId, id]
-        );
-
-        const { rows: [userProfile] } = await db.query(
-            'SELECT "contadorreviews" FROM user_profile WHERE userId = $1',
-            [userId]
         );
 
         return rows;

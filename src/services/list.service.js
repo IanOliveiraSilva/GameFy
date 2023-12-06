@@ -2,6 +2,10 @@ const db = require("../config/db");
 const RAWG_API_KEY = process.env.RAWG_API_KEY;
 const axios = require("axios");
 
+const { ListRepository } = require("../repositories/list.repository");
+
+const listRepository = new ListRepository();
+
 class ListService {
     async createList({name, description, gameIds, isPublic, userId}){
         if (!name) {

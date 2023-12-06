@@ -36,13 +36,16 @@ class GameService {
                 gameData.gameplayCompletionist = hltbResult[0].gameplayCompletionist;
             }
 
-            const mediagames = await gameRepository.getMediaNotas(id);
+            let mediagames = await gameRepository.getMediaNotas(id);
 
-            if (!mediagames) {
+            if (mediagames === undefined) {
                 mediagames = {
                     medianotas: 0,
                 };
             }
+            
+            console.log(mediagames);
+            
             return {
                 body: {
                     gameData,

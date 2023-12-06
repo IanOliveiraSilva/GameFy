@@ -78,7 +78,7 @@ class ReviewService {
         const reviews = await reviewRepository.getAllReviewsFromGames({ gamesId });
 
         // Checking if there are no reviews found
-        if (!review) {
+        if (!reviews) {
             throw new Error('The user has no reviews matching the provided game ID.');
         }
 

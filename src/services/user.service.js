@@ -161,14 +161,14 @@ class UserService {
 
     // Format the birthday date to the 'DD/MM/YYYY' format
     if (userProfile && userProfile.birthday) {
-      const formattedDate = formatDateToString(new Date(userProfile.birthday));
+      const formattedDate = formatarDataParaString(new Date(userProfile.birthday));
       userProfile.birthday = formattedDate;
     }
 
     // Return a success message along with the found user profile
     return {
       message: "Profile found successfully!",
-      profile: userProfile,
+      perfil: userProfile,
     };
 
   }
@@ -179,14 +179,14 @@ class UserService {
 
     // Format the birthday date to the 'DD/MM/YYYY' format if a profile is found
     if (userProfile && userProfile.birthday) {
-      const formattedDate = formatDateToString(new Date(userProfile.birthday));
+      const formattedDate = formatarDataParaString(new Date(userProfile.birthday));
       userProfile.birthday = formattedDate;
     }
 
     // Return a success message along with the found user profile
     return {
       message: "Profile found successfully!",
-      profile: userProfile,
+      perfil: userProfile,
     };
 
   }

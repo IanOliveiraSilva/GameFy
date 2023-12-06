@@ -9,6 +9,7 @@ class UserRepository {
 
     return rows;
   }
+  
   async signUp({ username, email, hashedPassword }) {
     const { rows } = await db.query(
       "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id, username, email",

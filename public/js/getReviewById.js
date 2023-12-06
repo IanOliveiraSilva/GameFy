@@ -126,7 +126,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         gameContainer.appendChild(movieLink);
         reviewsContainer.appendChild(gameContainer);
 
-        if (reviewsData[0].review) {
+        console.log(reviewsData[0])
+        if (reviewsData[0]) {
+            
             const commentCell = document.createElement('div');
             commentCell.classList.add('profile-image-header-review-container')
             if (reviewsData[0].icon != null) {

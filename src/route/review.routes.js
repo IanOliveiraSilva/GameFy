@@ -36,4 +36,17 @@ router.delete(
   reviewController.deleteReview
 );
 
+router.put(
+  "/review/:id",
+  userMiddleware.auth,
+  reviewController.updateReview
+);
+
+router.patch(
+  "/review/:id",
+  userMiddleware.auth,
+  reviewController.updateReviewPartially
+);
+
+
 module.exports = router;

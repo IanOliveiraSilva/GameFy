@@ -79,3 +79,30 @@ exports.getAllReviewsFromUser = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.updateReview = async (req, res, next) => {
+  try {
+    const  id  = req.params.id;
+    const userId = req.user.id;
+    const { rating, review } = req.body;
+  
+
+    const response = await reviewService.updateReview({ rating, review, id, userId });
+    return res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.updateReviewPartially = async (req, res, next) => {
+  try {
+    const  id  = req.params.id;
+    const userId = req.user.id;
+    const { rating, review, ispublic } = req.body;
+
+    const response = await reviewService.updateReviewPartially({ rating, review, ispublic, userId, id });
+    return res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+};

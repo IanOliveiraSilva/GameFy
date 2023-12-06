@@ -2,13 +2,13 @@ const db = require("../config/db");
 
 class ReviewRepository {
 
-    async findGame({ gameId }){
+    async findGame({ gameId }) {
         const { rows: [existingGame] } = await db.query('SELECT * FROM games WHERE gameId = $1', [gameId]);
 
         return existingGame;
     }
 
-    async insertNewGame({ gameId, title, image}){
+    async insertNewGame({ gameId, title, image }) {
         const { rows: [newGame] } = await db.query(
             `
             INSERT INTO games (gameid, title, image)
@@ -21,8 +21,7 @@ class ReviewRepository {
         return newGame;
     }
 
-    
-    async createReview({ gameId, rating, comment, isPublic, userId }) {  
+    async createReview({ gameId, rating, comment, isPublic, userId }) {
         const { rows: [review] } = await db.query(
             `INSERT INTO reviews (userId, gameId, rating,
                 review,
@@ -134,7 +133,7 @@ class ReviewRepository {
         return reviews.rows;
     }
 
-    async getContadorReviews({ userId }){
+    async getContadorReviews({ userId }) {
         const { rows: [userProfile] } = await db.query(
             'SELECT "contadorreviews" FROM user_profile WHERE userId = $1',
             [userId]
@@ -143,7 +142,7 @@ class ReviewRepository {
         return userProfile;
     }
 
-    async updateContadorReviews({ newReviewCount, userId }){
+    async updateContadorReviews({ newReviewCount, userId }) {
         await db.query(
             'UPDATE user_profile SET "contadorreviews" = $1 WHERE userId = $2',
             [newReviewCount, userId]
@@ -161,6 +160,33 @@ class ReviewRepository {
         );
 
         return rows;
+    }
+
+    async updateReview({ rating, review, id, userId }) {
+        const { rows } = await db.query(
+            'UPDATE reviews SET rating = $1, review = $2 WHERE id = $3 AND userId = $4 RETURNING *',
+            [rating, review, id, userId]
+        );
+
+        return rows;
+    }
+
+    async getExistingReview({ id, userId }) {
+        const existingReview = await db.query(
+            "SELECT * FROM reviews WHERE id = $1 AND userId = $2",
+            [id, userId]
+        );
+
+        return existingReview.rows[0];
+    }
+
+    async updateReviewPartially(updatedReview, userId, id) {
+        const newReview  = await db.query(
+            "UPDATE reviews SET rating = $1, review = $2, ispublic = $3 WHERE userId = $4 AND id = $5 RETURNING *",
+            [updatedReview.rating, updatedReview.review, updatedReview.ispublic, userId, id]
+        );
+
+        return newReview.rows[0];
     }
 
 }

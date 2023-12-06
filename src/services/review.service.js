@@ -65,7 +65,6 @@ class ReviewService {
 
         // Checking if there are no reviews found
         if (reviews.rows.length === 0) {
-            // Returning a response with a 400 status and a message indicating no reviews were found
             throw new Error('The user has no reviews matching the provided search criteria.');
         }
 
@@ -145,6 +144,62 @@ class ReviewService {
         return {
             message: "Review successfully deleted!",
             review: reviews[0]
+        };
+    }
+
+    async updateReview({ rating, review, id, userId }) {
+        // Check if the 'rating' parameter is provided
+        if (!rating) {
+            return res.status(400).json({
+                message: 'Rating is required'
+            });
+        }
+
+        // Check if the 'review' parameter is provided
+        if (!review) {
+            return res.status(400).json({
+                message: 'Review is required'
+            });
+        }
+
+        // Update the review
+        const updateReview = await reviewRepository.updateReview({ rating, review, id, userId });
+
+        // Check if there are no reviews found
+        if (!updateReview) {
+            throw new Error('The user has no reviews matching the provided id.');
+        }
+
+        // Return a success message
+        return {
+            message: "Review updated successfully!",
+            review: updateReview[0]
+        };
+    }
+
+    async updateReviewPartially({ rating, review, ispublic, userId, id }) {
+        // Get the existing review 
+        const existingReview = await reviewRepository.getExistingReview({ id, userId });
+
+        // Check if there is no existing review
+        if (!existingReview) {
+            throw new Error('The user has no reviews matching the provided id.');
+        }
+
+        // Create an updatedReview object with the provided parameters, or use existing values if not provided
+        const updatedReview = {
+            rating: rating || existingReview.rating,
+            review: review || existingReview.review,
+            ispublic: ispublic !== undefined ? ispublic : existingReview.ispublic
+        };
+
+        // Update the review
+        const newReview = await reviewRepository.updateReviewPartially(updatedReview, userId, id);
+
+        // Return a success message
+        return {
+            message: "Review updated successfully!",
+            review: newReview
         };
     }
 }

@@ -82,8 +82,6 @@ class ReviewService {
     }
 
     async deleteReview({ id, userId }) {
-        await db.query('DELETE FROM comments WHERE reviewid = $1', [id]);
-
         const rows = await reviewRepository.deleteReview({ id, userId});
 
         if (rows.length === 0) {

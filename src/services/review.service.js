@@ -1,66 +1,58 @@
 const db = require("../config/db");
 
+const { ReviewRepository } = require("../repositories/review.repository");
+
+const reviewRepository = new ReviewRepository();
+
 // FUNÇÕES UTILITARIAS
 const updateGameAverageRating = async (gameId) => {
-    const { rows: [movie] } = await db.query(
+    // Get the average rating of reviews for the specified game
+    const { rows: [result] } = await db.query(
         `SELECT AVG(rating) AS average_rating FROM reviews WHERE gameId = $1`,
         [gameId]
     );
-    const averageRating = movie.average_rating || 0;
+
+    // Get the average rating from the result or defaulting to 0 if undefined
+    const averageRating = result.average_rating || 0;
+
+    // Updating the mediaNotas in the games table
     await db.query(
         `UPDATE games SET mediaNotas = $1 WHERE gameid = $2`,
         [averageRating, gameId]
     );
+
+    // Returning the average rating
     return averageRating;
 };
 
 class ReviewService {
-
     async createReview({ gameId, title, rating, comment, isPublic, image, userId }) {
+        // Defining limits for ratings
         const lowRating = 0;
         const highRating = 5;
 
+        // Checking if a game with the provided ID already exists
+        const existingGame = await reviewRepository.findGame({ gameId });
+
+        // If the game exists, use the existing ID. Otherwise, insert a new game and use the new ID
+        gameId = existingGame && existingGame.gameid
+            ? existingGame.gameid
+            : (await reviewRepository.insertNewGame({ gameId, title, image })).gameid;
+
+        // Checking if the rating is within the allowed limits
         if (!rating || rating < lowRating || rating > highRating) {
-            return res.status(400).json({ message: 'Rating deve ser um numero entre 0 a 5' });
+            throw new Error('Rating must be a number between 0 and 5');
         }
 
-        let { rows: [existingGame] } = await db.query('SELECT * FROM games WHERE gameId = $1', [gameId]);
+        // Creating the review
+        const review = await reviewRepository.createReview({ gameId, title, rating, comment, isPublic, image, userId });
 
-        if (existingGame && existingGame.gameid) {
-            gameId = existingGame.gameid;
-        } else {
-            const { rows: [newGame] } = await db.query(
-                `
-                INSERT INTO games (gameid, title, image)
-                VALUES ($1, $2, $3) 
-                RETURNING *
-                `,
-                [gameId, title, image]
-            );
-            gameId = newGame.gameid;
-        }
-
-        const { rows: [review] } = await db.query(
-            `INSERT INTO reviews (userId, gameId, rating,
-                review,
-                isPublic)
-              VALUES ($1,
-                $2,
-                $3,
-                $4,
-                $5)
-              RETURNING *`,
-            [userId,
-                gameId,
-                rating,
-                comment,
-                isPublic,]
-        );
-
+        // Updating the game's average rating
         await updateGameAverageRating(gameId);
 
+        // Returning a success message with the details of the created review
         return {
-            message: 'Review criada com sucesso!',
+            message: 'Review created successfully!',
             body: {
                 review
             }
@@ -68,159 +60,147 @@ class ReviewService {
     }
 
     async getAllReviews({ userId, sort }) {
-        const sortOptions = {
-            rating_desc: 'r.rating DESC',
-            rating_asc: 'r.rating ASC',
-            latest: 'created_at DESC',
-            oldest: 'created_at ASC',
-            title_desc: 'title ASC',
-            title_asc: 'title DESC'
-        };
+        // Get all reviews
+        const reviews = await reviewRepository.getAllReviews({ userId, sort });
 
-        const orderBy = sortOptions[sort] || 'created_at DESC';
-
-        const reviews = await db.query(
-            `SELECT r.id, r.userid, r.gameId, g.title, g.gameId, r.rating, r.review, r.ispublic, r.created_at
-            FROM reviews r
-            JOIN games g ON r.gameId = g.gameid 
-            JOIN users ON r.userId = users.id
-            WHERE r.userid = ${userId} AND r.isPublic
-            GROUP BY r.id, g.title, g.gameId
-            
-            ORDER BY ${orderBy}
-            
-            `,
-        );
-
+        // Checking if there are no reviews found
         if (reviews.rows.length === 0) {
-            return res.status(400).json({
-                message: 'O usuário não possui reviews com os critérios de busca fornecidos.'
-            });
+            throw new Error('The user has no reviews matching the provided search criteria.');
         }
 
+        // Returning the reviews
         return reviews.rows;
     }
 
     async getAllReviewsFromGames({ gamesId }) {
-        const reviews = await db.query(
-            `
-            SELECT users.username, reviews.id, games.title, reviews.rating, reviews.review, reviews.created_at, COUNT(c.id) AS comment_count
-            FROM reviews 
-            INNER JOIN games ON reviews.gameid = games.gameid 
-            INNER JOIN users ON reviews.userId = users.id 
-            LEFT JOIN comments c ON reviews.id = c.reviewId 
-            WHERE games.gameid = $1 AND reviews.ispublic = true
-            GROUP BY reviews.id, users.username, games.title
-            ORDER BY comment_count DESC
-            `,
-            [gamesId]
-        );
+        // Get reviews from a especific game
+        const reviews = await reviewRepository.getAllReviewsFromGames({ gamesId });
 
-        return reviews.rows;
+        // Checking if there are no reviews found
+        if (!reviews) {
+            throw new Error('The user has no reviews matching the provided game ID.');
+        }
+
+        // Returning the reviews
+        return reviews;
     }
 
     async getReviewById({ id }) {
-        const review = await db.query(
-            `SELECT r.id, r.userid, u.username, up.icon, r.gameid, g.title, g.gameid, r.rating, r.review, r.ispublic, r.created_at 
-            FROM reviews r 
-            LEFT JOIN games g ON r.gameid = g.gameid
-            LEFT JOIN user_profile up ON r.userId = up.userId
-            LEFT JOIN users u ON r.userId = u.id
-            WHERE r.id = $1 and r.ispublic = true`,
-            [id]
-        );
+        // Get reviews by id
+        const review = await reviewRepository.getReviewById({ id });
 
+        // Checking if there are no reviews found
         if (!review) {
-            return res.status(404).json({
-                message: 'Não foi possível encontrar a review com o ID fornecido.'
-            });
+            throw new Error('There are no reviews matching if the provided ID.');
         }
-        return review.rows
+
+        // Returning the reviews
+        return review;
+    }
+
+    async getAllReviewsFromUser({ userProfile, sort }) {
+        // Get reviews from a especific user
+        const reviews = await reviewRepository.getAllReviewsFromUser({ userProfile, sort });
+
+        // Checking if there are no reviews found
+        if (!reviews) {
+            throw new Error('There are no reviews matching the provided user.');
+        }
+
+        // Returning the reviews
+        return reviews;
     }
 
     async deleteReview({ id, userId }) {
-        await db.query('DELETE FROM comments WHERE reviewid = $1', [id]);
+        // Deleting the review
+        const reviews = await reviewRepository.deleteReview({ id, userId });
 
-        const { rows } = await db.query(
-            `DELETE FROM reviews
-       WHERE userId = $1 AND id = $2
-       RETURNING *`,
-            [userId, id]
-        );
-
-        if (rows.length === 0) {
-            return res.status(404).json({
-                message: "A review que você tentou deletar não existe."
-            });
+        // Checking if there are no reviews found
+        if (!reviews) {
+            throw new Error('The user has no reviews matching the provided ID.');
         }
 
-        const { rows: [userProfile] } = await db.query(
-            'SELECT "contadorreviews" FROM user_profile WHERE userId = $1',
-            [userId]
-        );
+        // Get the user review count
+        const userProfile = await reviewRepository.getContadorReviews({ userId });
 
+        // Updating the user review count if the user profile is available
         if (userProfile) {
+            // Retrieving the current review count or defaulting to 0 if undefined
             const currentReviewCount = userProfile.contadorreviews || 0;
+
+            // Calculating the new review count after the deletion
             let newReviewCount = currentReviewCount - 1;
 
+            // Ensuring the review count does not go below 0
             if (newReviewCount < 0) {
                 newReviewCount = 0;
             }
 
-            await db.query(
-                'UPDATE user_profile SET "contadorreviews" = $1 WHERE userId = $2',
-                [newReviewCount, userId]
-            );
+            // Updating the user review count
+            const updateContadorReviews = await reviewRepository.updateContadorReviews({ newReviewCount, userId });
         }
+
+        // Returning a success message and the deleted review
         return {
-            message: "Review deletada com sucesso!",
-            review: rows[0]
+            message: "Review successfully deleted!",
+            review: reviews[0]
         };
     }
 
-    async getAllReviewsFromUser({ userProfile, sort }) {
-        const userIdQuery = await db.query('SELECT userId FROM user_profile WHERE LOWER(userProfile) LIKE $1', [userProfile]);
-
-        if (userIdQuery.rows.length === 0) {
+    async updateReview({ rating, review, id, userId }) {
+        // Check if the 'rating' parameter is provided
+        if (!rating) {
             return res.status(400).json({
-                message: 'O usuário não foi encontrado'
+                message: 'Rating is required'
             });
         }
 
-        const userId = userIdQuery.rows[0].userid;
+        // Check if the 'review' parameter is provided
+        if (!review) {
+            return res.status(400).json({
+                message: 'Review is required'
+            });
+        }
 
-        
+        // Update the review
+        const updateReview = await reviewRepository.updateReview({ rating, review, id, userId });
 
-        const sortOptions = {
-            rating_desc: 'r.rating DESC',
-            rating_asc: 'r.rating ASC',
-            latest: 'created_at DESC',
-            oldest: 'created_at ASC',
-            title_desc: 'title ASC',
-            title_asc: 'title DESC'
+        // Check if there are no reviews found
+        if (!updateReview) {
+            throw new Error('The user has no reviews matching the provided id.');
+        }
+
+        // Return a success message
+        return {
+            message: "Review updated successfully!",
+            review: updateReview[0]
+        };
+    }
+
+    async updateReviewPartially({ rating, review, ispublic, userId, id }) {
+        // Get the existing review 
+        const existingReview = await reviewRepository.getExistingReview({ id, userId });
+
+        // Check if there is no existing review
+        if (!existingReview) {
+            throw new Error('The user has no reviews matching the provided id.');
+        }
+
+        // Create an updatedReview object with the provided parameters, or use existing values if not provided
+        const updatedReview = {
+            rating: rating || existingReview.rating,
+            review: review || existingReview.review,
+            ispublic: ispublic !== undefined ? ispublic : existingReview.ispublic
         };
 
-        const orderBy = sortOptions[sort] || 'created_at DESC';
+        // Update the review
+        const newReview = await reviewRepository.updateReviewPartially(updatedReview, userId, id);
 
-        const reviews = await db.query(
-            `SELECT r.id, r.userid, r.gameId, g.title, g.gameId, r.rating, r.review, r.ispublic, r.created_at, COUNT(c.id) as comment_count
-      FROM reviews r
-      JOIN games g ON r.gameId = g.gameid 
-      JOIN users ON r.userId = users.id
-      LEFT JOIN comments c ON r.id = c.reviewId 
-      WHERE r.userid = ${userId} AND r.isPublic
-      GROUP BY r.id, users.username, g.title, g.gameid
-      ORDER BY ${orderBy}
-      `
-        );
-
-        if (reviews.rows.length === 0) {
-            return res.status(400).json({
-                message: 'O usuário não possui reviews'
-            });
-        }
-
-        return reviews.rows;
+        // Return a success message
+        return {
+            message: "Review updated successfully!",
+            review: newReview
+        };
     }
 }
 

@@ -1,30 +1,28 @@
-const db = require("../config/db");
+const { CommentRepository } = require("../repositories/comment.repository");
+
+const commentRepository = new CommentRepository();
 
 class CommentService {
     async createComment({ reviewId, comment, userId }) {
-        const {
-            rows: [existingReview],
-        } = await db.query("SELECT * FROM reviews WHERE id = $1", [reviewId]);
+        // Get existing review based on the provided reviewId
+        const existingReview = await commentRepository.getExistingReview({ reviewId })
 
+        // Checking if there are no review found
         if (!existingReview || !existingReview.id) {
-            throw new Error("Review não encontrada!");
+            throw new Error("Review not found!");
         }
 
+        // Check if the user is trying to comment on their own review
         if (existingReview.userid === userId) {
-            throw new Error("Você não pode comentar na sua própria review!");
+            throw new Error("You can't comment on your own review");
         }
 
-        const {
-            rows: [newComment],
-        } = await db.query(
-            `INSERT INTO comments (reviewId, userId, comment)
-              VALUES ($1, $2, $3)
-              RETURNING *`,
-            [reviewId, userId, comment]
-        );
+        // Create a new comment
+        const newComment = await commentRepository.createComment({ reviewId, comment, userId })
 
+        // Return a success message and the created comment
         return {
-            message: 'Comentário criado com sucesso!',
+            message: 'Comment created successfully!',
             body: {
                 comment: newComment
             }
@@ -32,77 +30,68 @@ class CommentService {
     }
 
     async getAllCommentsFromUser({ userId }) {
-        const comments = await db.query(
-            `SELECT c.id, c.reviewid, r.gameId, g.title, c.comment, c.createdAt 
-              FROM comments c 
-              JOIN reviews r ON c.reviewid = r.id 
-              JOIN games g ON r.gameId = g.gameId 
-              WHERE c.userId = $1`,
-            [userId]
-        );
+        // Get comments from a especific user
+        const comments = await commentRepository.getAllCommentsFromUser({ userId });
 
-        if (!comments.rows.length) {
-            throw new Error("O usuário não possui comentários");
+        // Checking if there are no comments found
+        if (!comments) {
+            throw new Error("There are no comments matching the provided user.");
         }
 
+        // Returning the comments
         return comments.rows;
     }
 
     async getReviewComment({ id }) {
-        const { rows: comments } = await db.query(
-            `SELECT c.id, c.userId, u.username, c.comment, c.createdAt, c.reviewid, COUNT(*)
-        FROM comments c 
-        JOIN users u ON c.userId = u.id 
-        WHERE c.reviewId = $1
-        GROUP BY c.id, u.username`,
-            [id]
-        );
+        // Get comment by id
+        const comments = await commentRepository.getReviewComment({ id });
 
-        if (!comments || !comments.length) {
-            throw new Error("A review não possui comentários");
+        // Checking if there are no comments found
+        if (!comments) {
+            throw new Error("The review has no comments");
         }
 
+        // Returning the comments
         return comments;
     }
 
     async deleteComment({ id, userId }) {
-        const { rows } = await db.query(
-            `DELETE FROM comments
-               WHERE userId = $1 AND id = $2
-               RETURNING *`,
-            [userId, id]
-        );
+        // Deleting the comment
+        const comment = await commentRepository.deleteComment({ id, userId })
 
-        if (!rows.length) {
-            throw new Error("O comentário quer você tentou deletar não exists.");
+        // Checking if there are no comments found
+        if (!comment) {
+            throw new Error("The comment you tried to delete does not exist.");
         }
 
+        // Returning a success message and the deleted comment
         return {
-            message: "Comentário deletado com sucesso!",
-            comment: rows[0],
+            message: "Comment deleted successfully!",
+            comment: comment[0],
         }
     }
 
     async updateComment({ id, comment, userId }) {
+        // Updating the comment
+        const Updatecomment = await commentRepository.updateComment({ id, comment, userId })
+
+        // Checking if the user passed the comment
         if (!comment) {
-            throw new Error("Comentário é obrigatório");
+            throw new Error("Comment is mandatory");
         }
 
-        const { rows } = await db.query(
-            "UPDATE comments SET comment = $1 WHERE id = $2 AND userId = $3 RETURNING *",
-            [comment, id, userId]
-        );
-
-        if (!rows.length) {
+        // Checking if there are no comments found
+        if (!Updatecomment.length) {
             throw new Error(
-                "Não foi possível encontrar o comentário com o ID fornecido."
+                "Unable to find comment with the given ID."
             );
         }
-        return {
-            message: "Comentário atualizado com sucesso!",
-            comment: rows[0],
-        }
 
+         // Returning a success message and the updated comment
+        return {
+            message: "CComment updated successfully!",
+            comment: Updatecomment[0],
+        }
     }
 }
 

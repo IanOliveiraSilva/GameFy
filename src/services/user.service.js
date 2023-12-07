@@ -1,80 +1,73 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const db = require("../config/db");
+const formatarDataParaString = require("../utils/formatDate");
 
-function formatarDataParaString(data) {
-  const dia = String(data.getDate()).padStart(2, "0");
-  const mes = String(data.getMonth() + 1).padStart(2, "0");
-  const ano = data.getFullYear();
+const { UserRepository } = require("../repositories/user.repository");
 
-  return `${dia}/${mes}/${ano}`;
-}
+const userRepository = new UserRepository();
+
 
 class UserService {
-
   async signUp({ username, email, password }) {
-    // Validação dos campos de entrada
+    // Validation of input fields
     if (!username || !email || !password) {
       throw new Error("All fields are required");
     }
 
-    // Validação para saber se o email já está em uso
-    const emailExists = await db.query("SELECT * FROM users WHERE email = $1", [
-      email,
-    ]);
-    if (emailExists.rows.length >= 1) {
+    // Validation to check if the email is already in use
+    const emailExists = await userRepository.findUser(email);
+
+    if (emailExists.length >= 1) {
       throw new Error("Email already taken");
     }
 
-    // Validação para saber se o usaurio já está em uso
-    const userExists = await db.query(
-      "SELECT * FROM users WHERE username = $1",
-      [username]
-    );
+    // Validation to check if the username is already in use
+    const userExists = await userRepository.findUser(username);
 
-    if (userExists.rows.length > 0) {
+    if (userExists.length >= 1) {
       throw new Error("User already taken");
     }
 
-    // Hash da senha antes de salvar no banco de dados
+    // Hash the password before saving it to the database
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Cria novo usuario no banco de dados
-    const newUser = await db.query(
-      "INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id, username, email",
-      [username, email, hashedPassword]
-    );
+    // Create a new user in the database
+    const { rows: newUser } = await userRepository.signUp({
+      username,
+      email,
+      hashedPassword,
+    });
 
-    // Gera um token de autenticação
+    // Generate an authentication token
     const token = jwt.sign(
-      { id: newUser.rows[0].id, username: newUser.rows[0].username },
+      { id: newUser[0].id, username: newUser[0].username },
       process.env.JWT_SECRET,
       { expiresIn: "10d" }
     );
 
+    // Return the newly created user and the authentication token
     return {
-      user: newUser.rows[0],
+      user: newUser[0],
       token,
     };
+
   }
 
   async login({ email_or_username, password }) {
-    // Validação dos campos de entrada
+    // Validation of input fields
     if (!email_or_username || !password) {
       throw new Error("Email/username and password are required");
     }
 
-    // Consulta o usuário no banco de dados pelo email ou nome de usuário
-    const user = await db.query(
-      "SELECT u.id, u.username, u.email, u.password, u.created_at, up.icon FROM users u LEFT JOIN user_profile up ON up.userid = u.id WHERE username  = $1 OR email  = $1;",
-      [email_or_username]
-    );
+    // Query the user in the database based on the email or username
+    const user = await userRepository.login(email_or_username);
 
+    // Check if the user with the provided email/username exists
     if (!user.rows.length) {
       throw new Error("Invalid email/username or password");
     }
 
-    // Verifica se a senha fornecida corresponde à senha no banco de dados
+    // Verify if the provided password matches the password in the database
     const isPasswordCorrect = await bcrypt.compare(
       password,
       user.rows[0].password
@@ -83,13 +76,14 @@ class UserService {
       throw new Error("Invalid email/username or password");
     }
 
-    // Gera um token de autenticação
+    // Generate an authentication token
     const token = jwt.sign(
       { id: user.rows[0].id, username: user.rows[0].username },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
+    // Return the user information and the authentication token
     return {
       user: {
         id: user.rows[0].id,
@@ -99,23 +93,21 @@ class UserService {
       },
       token,
     };
+
   }
 
   async changePassword({ userId, newPassword }) {
+    // Hash the new password before updating it in the database
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    await db.query(
-      `
-      UPDATE users
-      SET password = $1 
-      WHERE id = $2
-      `,
-      [hashedPassword, userId]
-    );
+    // Update the user password in the database
+    await userRepository.changePassword({ userId, hashedPassword });
 
+    // Return a success message
     return {
-      message: "Senha alterada com sucesso!"
-    }
+      message: "Password changed successfully!",
+    };
+
   }
 
   async createUserProfile({
@@ -132,117 +124,83 @@ class UserService {
     userId,
   }) {
 
-    const {
-      rows: [userProfile],
-    } = await db.query(
-      `INSERT INTO user_profile(name, familyName, bio, userId, location, birthday, socialmediaInstagram, socialMediaX, socialMediaTikTok, userProfile, icon) 
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
-        RETURNING *`,
-      [
-        name,
-        familyName,
-        bio,
-        userId,
-        location,
-        birthday,
-        socialmediaInstagram,
-        socialMediaX,
-        socialMediaTikTok,
-        userProfileTag,
-        icon,
-      ]
-    );
+    // Create a user profile
+    const userprofile = await userRepository.createUserProfile({
+      name,
+      familyName,
+      bio,
+      location,
+      birthday,
+      socialmediaInstagram,
+      socialMediaX,
+      socialMediaTikTok,
+      userProfileTag,
+      icon,
+      userId,
+    });
 
+    // Return a success message
     return {
-      message: "Perfil criado com sucesso",
-      body: {
-        profile: userProfile,
-      },
+      message: "Profile created successfully",
+      profile: userprofile
     };
+
   }
 
   async getUserProfile({ userId }) {
-    let {
-      rows: [userProfile],
-    } = await db.query(
-      `SELECT u.id, u.userid, u.name as givenName, u.familyname, u.location, u.bio, u.birthday, u.socialmediainstagram, u.socialmediax, u.socialmediatiktok, u.userprofile, u.icon,
-      (SELECT COUNT(*) FROM reviews WHERE userId = $1) AS contadorreviews, 
-      (SELECT COUNT(*) FROM lists WHERE userId = $1) AS contadorlists 
-      FROM user_profile u
-      WHERE u.userId = $1
-      `,
-      [userId]
-    );
+    // Retrieve the user profile from the database based on the provided userId
+    const userProfile = await userRepository.getUserProfile({ userId })
 
-    if (userProfile == undefined) {
+    // Check if the user profile is undefined
+    if (userProfile === undefined) {
+      // If undefined, create a default profile indicating that the user doesn't have a profile
       userProfile = {
         haveProfile: false,
       };
     }
 
-    // Formata a data de nascimento para o formato 'DD/MM/AAAA'
+    // Format the birthday date to the 'DD/MM/YYYY' format
     if (userProfile && userProfile.birthday) {
-      const dataFormatada = formatarDataParaString(
-        new Date(userProfile.birthday)
-      );
-      userProfile.birthday = dataFormatada;
+      const formattedDate = formatarDataParaString(new Date(userProfile.birthday));
+      userProfile.birthday = formattedDate;
     }
 
+    // Return a success message along with the found user profile
     return {
-      message: "Perfil encontrado com sucesso!",
-      body: userProfile
-    }
+      message: "Profile found successfully!",
+      perfil: userProfile,
+    };
+
   }
 
   async getProfileByUser({ userProfileParam }) {
-    const userIdQuery = await db.query(
-      "SELECT * FROM user_profile WHERE LOWER(userProfile) = LOWER($1)",
-      [userProfileParam]
-    );
+    // Retrieve the user profile from the database based on the provided userProfileParam
+    const userProfile = await userRepository.getProfileByUser({ userProfileParam })
 
-    if (!userIdQuery.rows.length) {
-      throw new Error("O usuário não foi encontrado");
-    }
-
-    const userId = userIdQuery.rows[0].userid;
-
-    // Consulta o perfil do usuário
-    const {
-      rows: [userProfile],
-    } = await db.query(
-      `SELECT u.id, u.userid, u.name as givenName, u.familyname, u.bio, u.location, u.birthday, u.socialmediainstagram, u.socialmediax, u.socialmediatiktok, u.userprofile, 
-      u.icon, 
-      (SELECT COUNT(*) FROM reviews WHERE userId = $1) AS contadorreviews, 
-      (SELECT COUNT(*) FROM lists WHERE userId = $1) AS contadorlists 
-      FROM user_profile u
-      WHERE u.userId = $1`,
-      [userId]
-    );
-
-    // Formata a data de nascimento para o formato 'DD/MM/AAAA'
+    // Format the birthday date to the 'DD/MM/YYYY' format if a profile is found
     if (userProfile && userProfile.birthday) {
-      const dataFormatada = formatarDataParaString(
-        new Date(userProfile.birthday)
-      );
-      userProfile.birthday = dataFormatada;
+      const formattedDate = formatarDataParaString(new Date(userProfile.birthday));
+      userProfile.birthday = formattedDate;
     }
 
+    // Return a success message along with the found user profile
     return {
-      message: "Perfil encontrado com sucesso!",
-      body: userProfile
-    }
+      message: "Profile found successfully!",
+      perfil: userProfile,
+    };
+
   }
 
   async searchUsers({ searchQuery }) {
-    const { rows: users } = await db.query(
-      "SELECT * FROM user_profile WHERE LOWER(userProfile) LIKE $1",
-      [`%${searchQuery}%`]
-    );
+    // Search for users in the database based on the provided searchQuery
+    const users = await userRepository.searchUsers({ searchQuery })
 
+    // Check if no users are found
     if (!users.length) {
-      throw new Error("Nenhum usuário encontrado com a consulta fornecida");
+      throw new Error("No users found with the provided query");
     }
 
+    // Map the retrieved user data to create profiles
     const profiles = users.map((user) => {
       return {
         userId: user.userid,
@@ -255,10 +213,12 @@ class UserService {
       };
     });
 
+    // Return a success message along with the found user profiles
     return {
-      message: "Usuarios encontrados com sucesso!",
-      users: profiles
-    }
+      message: "Users found successfully!",
+      users: profiles,
+    };
+
   }
 
   async updateUserProfile({
@@ -270,40 +230,27 @@ class UserService {
     socialmediaInstagram,
     socialMediaX,
     socialMediaTikTok,
-    userId
+    userId,
   }) {
+    // Update the user profile in the database with the provided information
+    const newProfile = await userRepository.updateUserProfile({
+      name,
+      familyName,
+      bio,
+      location,
+      birthday,
+      socialmediaInstagram,
+      socialMediaX,
+      socialMediaTikTok,
+      userId,
+    });
 
-    const {
-      rows: [newProfile],
-    } = await db.query(
-      `UPDATE user_profile
-     SET name = $1,
-      familyName = $2,
-      bio = $3,
-      location = $4,
-      birthday = $5,
-      socialmediaInstagram = $6, 
-      socialMediaX = $7,
-      socialMediaTikTok = $8
-     WHERE userId = $9
-     RETURNING *`,
-      [
-        name,
-        familyName,
-        bio,
-        location,
-        birthday,
-        socialmediaInstagram,
-        socialMediaX,
-        socialMediaTikTok,
-        userId,
-      ]
-    );
-
+    // Return a success message along with the updated user profile
     return {
-      message: "Usuario atualizado com sucesso!",
-      user: newProfile
-    }
+      message: "User updated successfully!",
+      user: newProfile,
+    };
+
   }
 
   async updateUserProfilePartially({
@@ -316,137 +263,55 @@ class UserService {
     socialMediaX,
     socialMediaTikTok,
     icon,
-    userId
+    userId,
   }) {
 
-    // Consulta o perfil existente pelo userId
-    const existingProfile = await db.query(
-      "SELECT * FROM user_profile WHERE userId = $1",
-      [userId]
-    );
+    // Find the user profile in the database based on the provided userId
+    const userProfile = await userRepository.findUserProfile({ userId });
 
-    // Atualiza apenas os campos fornecidos no corpo da requisição, mantendo os valores existentes se não forem fornecidos
+    // Check if the user profile is not found
+    if (!userProfile) {
+      throw new Error("User not found");
+    }
+
+    // Create an updated profile object with the provided or existing values
     const updatedProfile = {
-      name: name || existingProfile.rows[0].name,
-      familyName: familyName || existingProfile.rows[0].familyname,
-      bio: bio || existingProfile.rows[0].bio,
-      location: location || existingProfile.rows[0].location,
-      birthday: birthday || existingProfile.rows[0].birthday,
-      socialmediaInstagram: socialmediaInstagram || existingProfile.rows[0].socialmediaInstagram,
-      socialMediaX: socialMediaX || existingProfile.rows[0].socialMediax,
-      socialMediaTikTok: socialMediaTikTok || existingProfile.rows[0].socialMediatiktok,
-      icon: icon || existingProfile.rows[0].icon,
+      name: name !== undefined ? name : userProfile.name,
+      familyName: familyName !== undefined ? familyName : userProfile.familyname,
+      bio: bio !== undefined ? bio : userProfile.bio,
+      location: location !== undefined ? location : userProfile.location,
+      birthday: birthday !== undefined ? birthday : userProfile.birthday,
+      socialmediaInstagram: socialmediaInstagram !== undefined ? socialmediaInstagram : userProfile.socialmediainstagram,
+      socialMediaX: socialMediaX !== undefined ? socialMediaX : userProfile.socialmediax,
+      socialMediaTikTok: socialMediaTikTok !== undefined ? socialMediaTikTok : userProfile.socialmediatiktok,
+      icon: icon !== undefined ? icon : userProfile.icon,
     };
 
-    // Atualiza o perfil no banco de dados
-    const {
-      rows: [newProfile],
-    } = await db.query(
-      `UPDATE user_profile 
-       SET name = $1, 
-        familyName = $2, 
-        bio = $3, 
-        location = $4,
-        birthday = $5, 
-        socialmediaInstagram = $6, 
-        socialMediaX = $7, 
-        socialMediaTikTok = $8,
-        icon = $9
-       WHERE userId = $10 
-       RETURNING *`,
-      [
-        updatedProfile.name,
-        updatedProfile.familyName,
-        updatedProfile.bio,
-        updatedProfile.location,
-        updatedProfile.birthday,
-        updatedProfile.socialmediaInstagram,
-        updatedProfile.socialMediaX,
-        updatedProfile.socialMediaTikTok,
-        icon,
-        userId,
-      ]
-    );
+    // Update the user profile in the database with the partially updated values
+    const newProfile = await userRepository.updateUserProfilePartially(updatedProfile, userId);
 
+    // Return a success message along with the updated user profile
     return {
-      message: "Usuario atualizado com sucesso!",
-      user: newProfile
-    }
-  }
+      message: "User updated successfully!",
+      user: newProfile,
+    };
 
-  async AuthMiddleware({ token, res, req, next }) {
-    /// Verifica se o token foi fornecido
-    if (!token) {
-      return res
-        .status(401)
-        .json({ message: "Token de autorização não fornecido" });
-    }
-
-    // Decodifica o token
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-
-    // Consulta o usuário no banco de dados com base no ID do token decodificado
-    const user = await db.query("SELECT * FROM users WHERE id = $1", [
-      decodedToken.id,
-    ]);
-
-    // Verifica se o token é válido
-    if (!user) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
-    // Define o objeto do usuário na requisição para uso nas rotas protegidas
-    req.user = user.rows[0];
-
-    // Continua com a execução das rotas protegidas
-    next();
   }
 
   async getRatingCount({ userId }) {
-    const ratingCount = await db.query(
-      `
-      SELECT u.username, rating, COUNT(*) 
-      FROM reviews r
-      JOIN users u ON r.userId = u.id
-      WHERE userId = $1
-      GROUP BY rating, u.username
-      ORDER BY rating DESC;      
-      `,
-      [userId]
-    );
-
-    const ratings = ratingCount.rows;
+    const ratings = await userRepository.getRatingCount({ userId });
 
     return {
-      ratings: ratings
-    }
+      ratings: ratings,
+    };
   }
 
-  async GetRatingCountByUser({userProfile}){
-    const userIdQuery = await db.query(
-      "SELECT * FROM user_profile WHERE LOWER(userProfile) LIKE $1",
-      [userProfile]
-    );
-
-    const userId = userIdQuery.rows[0].userid;
-
-    const ratingCount = await db.query(
-      `
-      SELECT u.username, rating, COUNT(*) 
-      FROM reviews r
-      JOIN users u ON r.userId = u.id
-      WHERE userId = $1
-      GROUP BY rating, u.username
-      ORDER BY rating DESC;      
-      `,
-      [userId]
-    );
-
-    const ratings = ratingCount.rows;
+  async GetRatingCountByUser({ userProfile }) {
+    const ratings = await userRepository.getRatingCountByUser({ userProfile });
 
     return {
-      ratings: ratings
-    }
+      ratings: ratings,
+    };
   }
 }
 

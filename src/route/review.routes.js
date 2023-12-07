@@ -1,18 +1,52 @@
-const router = require('express-promise-router')();
-const reviewController = require('../controller/review.controller');
-const userController = require('../controller/user.controller');
+const router = require("express-promise-router")();
+const reviewController = require("../controllers/review.controller");
+const { UserMiddleware } = require("../middlewares/auth-middleware");
 
-router.post('/create-review/:id', userController.AuthMiddleware, reviewController.createReview);
+const userMiddleware = new UserMiddleware();
 
-router.get('/profile/reviews/', userController.AuthMiddleware, reviewController.getAllReviews);
+router.post(
+  "/create-review/:id",
+  userMiddleware.auth,
+  reviewController.createReview
+);
 
-router.get('/game-reviews/:id', userController.AuthMiddleware, reviewController.getAllReviewsFromGames);
+router.get(
+  "/profile/reviews/",
+  userMiddleware.auth,
+  reviewController.getAllReviews
+);
 
-router.get('/user/reviews/:userProfile', userController.AuthMiddleware, reviewController.getAllReviewsFromUser);
+router.get(
+  "/game-reviews/:id",
+  userMiddleware.auth,
+  reviewController.getAllReviewsFromGames
+);
 
-router.get('/review/:id', userController.AuthMiddleware, reviewController.getReviewById);
+router.get(
+  "/user/reviews/:userProfile",
+  userMiddleware.auth,
+  reviewController.getAllReviewsFromUser
+);
 
-router.delete('/review/:id', userController.AuthMiddleware, reviewController.deleteReview);
+router.get("/review/:id", userMiddleware.auth, reviewController.getReviewById);
+
+router.delete(
+  "/review/:id",
+  userMiddleware.auth,
+  reviewController.deleteReview
+);
+
+router.put(
+  "/review/:id",
+  userMiddleware.auth,
+  reviewController.updateReview
+);
+
+router.patch(
+  "/review/:id",
+  userMiddleware.auth,
+  reviewController.updateReviewPartially
+);
+
 
 module.exports = router;
-

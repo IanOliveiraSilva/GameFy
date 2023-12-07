@@ -36,7 +36,7 @@ class ListService {
                 }
             }
         }
-
+        
         // Get user profile 
         const userProfile = await listRepository.getReviewCount({ userId });
 
